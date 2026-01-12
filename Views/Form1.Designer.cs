@@ -1,4 +1,4 @@
-﻿namespace Hospital_Management
+﻿namespace Hospital_Management.Views
 {
     partial class Form1
     {
