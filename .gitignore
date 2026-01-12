@@ -22,11 +22,6 @@ bld/
 *.sln.docstates
 *.rsuser
 
-# NuGet Packages
-packages/
-*.nupkg
-**/[Pp]ackages/*
-!**/[Pp]ackages/build/
 
 # Environment files (PENTING: jangan commit credentials!)
 .env
