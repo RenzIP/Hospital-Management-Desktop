@@ -117,7 +117,7 @@ namespace Hospital_Management.Views
                 MessageBox.Show($"Welcome! You are logged in to {department}.", "Login Successful", 
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
-                Form1 mainForm = new Form1();
+                HomeForm mainForm = new HomeForm();
                 this.Hide();
                 mainForm.ShowDialog();
                 this.Close();
