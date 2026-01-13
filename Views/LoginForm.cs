@@ -141,5 +141,19 @@ namespace Hospital_Management.Views
         {
 
         }
+
+        private void btnTogglePassword_Click(object sender, EventArgs e)
+        {
+            if (txtPassword.PasswordChar == '●')
+            {
+                txtPassword.PasswordChar = '\0'; // Show password
+                btnTogglePassword.Text = "🙈";
+            }
+            else
+            {
+                txtPassword.PasswordChar = '●'; // Hide password
+                btnTogglePassword.Text = "👁";
+            }
+        }
     }
 }

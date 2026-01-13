@@ -58,6 +58,7 @@ namespace Hospital_Management.Views
             this.pnlCard.Controls.Add(this.cmbDepartment);
             this.pnlCard.Controls.Add(this.lblPassword);
             this.pnlCard.Controls.Add(this.txtPassword);
+            this.pnlCard.Controls.Add(this.btnTogglePassword);
             this.pnlCard.Controls.Add(this.chkTrustedDevice);
             this.pnlCard.Controls.Add(this.lblForgotPassword);
             this.pnlCard.Controls.Add(this.btnLogin);
@@ -175,8 +176,25 @@ namespace Hospital_Management.Views
             this.txtPassword.Location = new System.Drawing.Point(40, 275);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '●';
-            this.txtPassword.Size = new System.Drawing.Size(320, 25);
+            this.txtPassword.Size = new System.Drawing.Size(290, 25);
             this.txtPassword.TabIndex = 8;
+            // 
+            // btnTogglePassword
+            // 
+            this.btnTogglePassword = new System.Windows.Forms.Button();
+            this.btnTogglePassword.BackColor = System.Drawing.Color.White;
+            this.btnTogglePassword.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnTogglePassword.FlatAppearance.BorderSize = 0;
+            this.btnTogglePassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTogglePassword.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnTogglePassword.ForeColor = System.Drawing.Color.Gray;
+            this.btnTogglePassword.Location = new System.Drawing.Point(330, 275);
+            this.btnTogglePassword.Name = "btnTogglePassword";
+            this.btnTogglePassword.Size = new System.Drawing.Size(30, 25);
+            this.btnTogglePassword.TabIndex = 20;
+            this.btnTogglePassword.Text = "👁";
+            this.btnTogglePassword.UseVisualStyleBackColor = false;
+            this.btnTogglePassword.Click += new System.EventHandler(this.btnTogglePassword_Click);
             // 
             // chkTrustedDevice
             // 
@@ -280,5 +298,6 @@ namespace Hospital_Management.Views
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Label lblAuthorized;
         private System.Windows.Forms.Label lblCopyright;
+        private System.Windows.Forms.Button btnTogglePassword;
     }
 }
