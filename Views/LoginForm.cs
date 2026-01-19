@@ -2,23 +2,17 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using Hospital_Management.Controllers;
 
 namespace Hospital_Management.Views
 {
     public partial class LoginForm : Form
     {
-        private string employeePlaceholder = "ID-12345 or email@hospital.org";
+        private string employeePlaceholder = "Enter username or email";
 
         public LoginForm()
         {
             InitializeComponent();
-            SetupForm();
-        }
-
-        private void SetupForm()
-        {
-            // Set department dropdown to first item
-            cmbDepartment.SelectedIndex = 0;
         }
 
         private void LoginForm_Load(object sender, EventArgs e)
@@ -79,24 +73,15 @@ namespace Hospital_Management.Views
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            string employeeId = txtEmployeeId.Text == employeePlaceholder ? "" : txtEmployeeId.Text;
+            string username = txtEmployeeId.Text == employeePlaceholder ? "" : txtEmployeeId.Text;
             string password = txtPassword.Text;
-            string department = cmbDepartment.SelectedItem?.ToString();
 
             // Validation
-            if (string.IsNullOrWhiteSpace(employeeId))
+            if (string.IsNullOrWhiteSpace(username))
             {
-                MessageBox.Show("Please enter your Employee ID or Email.", "Validation Error", 
+                MessageBox.Show("Please enter your Username or Email.", "Validation Error", 
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtEmployeeId.Focus();
-                return;
-            }
-
-            if (department == "Select Department" || string.IsNullOrEmpty(department))
-            {
-                MessageBox.Show("Please select a department.", "Validation Error", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cmbDepartment.Focus();
                 return;
             }
 
@@ -109,12 +94,22 @@ namespace Hospital_Management.Views
             }
 
             // Use controller for authentication
-            var controller = new Controllers.LoginController();
-            bool isLoginSuccess = controller.PerformLogin(employeeId, password);
+            var controller = new LoginController();
+            bool isLoginSuccess = controller.PerformLogin(username, password);
 
             if (isLoginSuccess)
             {
-                MessageBox.Show($"Welcome! You are logged in to {department}.", "Login Successful", 
+                // Role and department are now fetched from database via CurrentUser
+                string role = CurrentUser.Role ?? "User";
+                string department = CurrentUser.Department ?? "";
+                string welcomeMessage = $"Welcome, {CurrentUser.Username}!\nRole: {role}";
+                
+                if (!string.IsNullOrEmpty(department))
+                {
+                    welcomeMessage += $"\nDepartment: {department}";
+                }
+
+                MessageBox.Show(welcomeMessage, "Login Successful", 
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
                 HomeForm mainForm = new HomeForm();
@@ -124,7 +119,7 @@ namespace Hospital_Management.Views
             }
             else
             {
-                MessageBox.Show("Invalid Employee ID or Password. Please try again.", "Authentication Failed", 
+                MessageBox.Show("Invalid Username or Password. Please try again.", "Authentication Failed", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtPassword.Clear();
                 txtPassword.Focus();
@@ -135,11 +130,6 @@ namespace Hospital_Management.Views
         {
             MessageBox.Show("Please contact your system administrator to reset your password.", 
                 "Password Recovery", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void lblCopyright_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void btnTogglePassword_Click(object sender, EventArgs e)
