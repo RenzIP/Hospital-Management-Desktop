@@ -2,15 +2,8 @@ namespace Hospital_Management.Views
 {
     partial class LoginForm
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@ namespace Hospital_Management.Views
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             this.pnlCard = new System.Windows.Forms.Panel();
@@ -38,6 +27,7 @@ namespace Hospital_Management.Views
             this.cmbDepartment = new System.Windows.Forms.ComboBox();
             this.lblPassword = new System.Windows.Forms.Label();
             this.txtPassword = new System.Windows.Forms.TextBox();
+            this.btnTogglePassword = new System.Windows.Forms.Button();
             this.chkTrustedDevice = new System.Windows.Forms.CheckBox();
             this.lblForgotPassword = new System.Windows.Forms.LinkLabel();
             this.btnLogin = new System.Windows.Forms.Button();
@@ -72,7 +62,7 @@ namespace Hospital_Management.Views
             // lblLockIcon
             // 
             this.lblLockIcon.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold);
-            this.lblLockIcon.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(150)))), ((int)(((byte)(243)))));
+            this.lblLockIcon.ForeColor = System.Drawing.Color.FromArgb(33, 150, 243);
             this.lblLockIcon.Location = new System.Drawing.Point(0, 20);
             this.lblLockIcon.Name = "lblLockIcon";
             this.lblLockIcon.Size = new System.Drawing.Size(400, 40);
@@ -83,7 +73,7 @@ namespace Hospital_Management.Views
             // lblTitle
             // 
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 18F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(50, 50, 50);
             this.lblTitle.Location = new System.Drawing.Point(0, 65);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(400, 35);
@@ -94,7 +84,7 @@ namespace Hospital_Management.Views
             // lblSubtitle
             // 
             this.lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(150)))), ((int)(((byte)(243)))));
+            this.lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(33, 150, 243);
             this.lblSubtitle.Location = new System.Drawing.Point(0, 100);
             this.lblSubtitle.Name = "lblSubtitle";
             this.lblSubtitle.Size = new System.Drawing.Size(400, 20);
@@ -106,10 +96,10 @@ namespace Hospital_Management.Views
             // 
             this.lblEmployeeId.AutoSize = true;
             this.lblEmployeeId.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblEmployeeId.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.lblEmployeeId.ForeColor = System.Drawing.Color.FromArgb(80, 80, 80);
             this.lblEmployeeId.Location = new System.Drawing.Point(40, 135);
             this.lblEmployeeId.Name = "lblEmployeeId";
-            this.lblEmployeeId.Size = new System.Drawing.Size(113, 15);
+            this.lblEmployeeId.Size = new System.Drawing.Size(110, 15);
             this.lblEmployeeId.TabIndex = 3;
             this.lblEmployeeId.Text = "Employee ID / Email";
             // 
@@ -130,29 +120,28 @@ namespace Hospital_Management.Views
             // 
             this.lblDepartment.AutoSize = true;
             this.lblDepartment.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblDepartment.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.lblDepartment.ForeColor = System.Drawing.Color.FromArgb(80, 80, 80);
             this.lblDepartment.Location = new System.Drawing.Point(40, 195);
             this.lblDepartment.Name = "lblDepartment";
-            this.lblDepartment.Size = new System.Drawing.Size(109, 15);
+            this.lblDepartment.Size = new System.Drawing.Size(105, 15);
             this.lblDepartment.TabIndex = 5;
             this.lblDepartment.Text = "Department Access";
             // 
             // cmbDepartment
             // 
             this.cmbDepartment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbDepartment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmbDepartment.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cmbDepartment.ForeColor = System.Drawing.Color.Gray;
             this.cmbDepartment.FormattingEnabled = true;
             this.cmbDepartment.Items.AddRange(new object[] {
-            "Select Department",
-            "Administration",
-            "Emergency",
-            "ICU",
-            "Laboratory",
-            "Pharmacy",
-            "Radiology",
-            "Surgery"});
+                "Select Department",
+                "Administration",
+                "Emergency",
+                "ICU",
+                "Laboratory",
+                "Pharmacy",
+                "Radiology",
+                "Surgery"});
             this.cmbDepartment.Location = new System.Drawing.Point(40, 215);
             this.cmbDepartment.Name = "cmbDepartment";
             this.cmbDepartment.Size = new System.Drawing.Size(320, 25);
@@ -162,10 +151,10 @@ namespace Hospital_Management.Views
             // 
             this.lblPassword.AutoSize = true;
             this.lblPassword.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.lblPassword.ForeColor = System.Drawing.Color.FromArgb(80, 80, 80);
             this.lblPassword.Location = new System.Drawing.Point(40, 255);
             this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(102, 15);
+            this.lblPassword.Size = new System.Drawing.Size(97, 15);
             this.lblPassword.TabIndex = 7;
             this.lblPassword.Text = "Security Password";
             // 
@@ -175,25 +164,24 @@ namespace Hospital_Management.Views
             this.txtPassword.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.txtPassword.Location = new System.Drawing.Point(40, 275);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.PasswordChar = '●';
-            this.txtPassword.Size = new System.Drawing.Size(290, 25);
+            this.txtPassword.PasswordChar = '*';
+            this.txtPassword.Size = new System.Drawing.Size(285, 25);
             this.txtPassword.TabIndex = 8;
             // 
             // btnTogglePassword
             // 
-            this.btnTogglePassword = new System.Windows.Forms.Button();
-            this.btnTogglePassword.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
+            this.btnTogglePassword.BackColor = System.Drawing.Color.White;
             this.btnTogglePassword.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTogglePassword.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnTogglePassword.FlatAppearance.BorderSize = 1;
             this.btnTogglePassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTogglePassword.Font = new System.Drawing.Font("Segoe UI Symbol", 12F);
-            this.btnTogglePassword.ForeColor = System.Drawing.Color.FromArgb(100, 100, 100);
-            this.btnTogglePassword.Location = new System.Drawing.Point(330, 275);
+            this.btnTogglePassword.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnTogglePassword.ForeColor = System.Drawing.Color.Gray;
+            this.btnTogglePassword.Location = new System.Drawing.Point(325, 275);
             this.btnTogglePassword.Name = "btnTogglePassword";
-            this.btnTogglePassword.Size = new System.Drawing.Size(30, 25);
-            this.btnTogglePassword.TabIndex = 20;
-            this.btnTogglePassword.Text = "👁";
+            this.btnTogglePassword.Size = new System.Drawing.Size(35, 25);
+            this.btnTogglePassword.TabIndex = 9;
+            this.btnTogglePassword.Text = "Show";
             this.btnTogglePassword.UseVisualStyleBackColor = false;
             this.btnTogglePassword.Click += new System.EventHandler(this.btnTogglePassword_Click);
             // 
@@ -201,11 +189,11 @@ namespace Hospital_Management.Views
             // 
             this.chkTrustedDevice.AutoSize = true;
             this.chkTrustedDevice.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.chkTrustedDevice.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.chkTrustedDevice.ForeColor = System.Drawing.Color.FromArgb(80, 80, 80);
             this.chkTrustedDevice.Location = new System.Drawing.Point(40, 315);
             this.chkTrustedDevice.Name = "chkTrustedDevice";
             this.chkTrustedDevice.Size = new System.Drawing.Size(102, 19);
-            this.chkTrustedDevice.TabIndex = 9;
+            this.chkTrustedDevice.TabIndex = 10;
             this.chkTrustedDevice.Text = "Trusted device";
             this.chkTrustedDevice.UseVisualStyleBackColor = true;
             // 
@@ -213,18 +201,18 @@ namespace Hospital_Management.Views
             // 
             this.lblForgotPassword.AutoSize = true;
             this.lblForgotPassword.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblForgotPassword.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(150)))), ((int)(((byte)(243)))));
+            this.lblForgotPassword.LinkColor = System.Drawing.Color.FromArgb(33, 150, 243);
             this.lblForgotPassword.Location = new System.Drawing.Point(260, 316);
             this.lblForgotPassword.Name = "lblForgotPassword";
             this.lblForgotPassword.Size = new System.Drawing.Size(100, 15);
-            this.lblForgotPassword.TabIndex = 10;
+            this.lblForgotPassword.TabIndex = 11;
             this.lblForgotPassword.TabStop = true;
             this.lblForgotPassword.Text = "Forgot Password?";
             this.lblForgotPassword.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblForgotPassword_LinkClicked);
             // 
             // btnLogin
             // 
-            this.btnLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(150)))), ((int)(((byte)(243)))));
+            this.btnLogin.BackColor = System.Drawing.Color.FromArgb(33, 150, 243);
             this.btnLogin.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnLogin.FlatAppearance.BorderSize = 0;
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -233,40 +221,39 @@ namespace Hospital_Management.Views
             this.btnLogin.Location = new System.Drawing.Point(40, 350);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(320, 40);
-            this.btnLogin.TabIndex = 11;
-            this.btnLogin.Text = "Authenticate && Login  🔐";
+            this.btnLogin.TabIndex = 12;
+            this.btnLogin.Text = "Authenticate && Login";
             this.btnLogin.UseVisualStyleBackColor = false;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
             // 
             // lblAuthorized
             // 
             this.lblAuthorized.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.lblAuthorized.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
+            this.lblAuthorized.ForeColor = System.Drawing.Color.FromArgb(150, 150, 150);
             this.lblAuthorized.Location = new System.Drawing.Point(0, 400);
             this.lblAuthorized.Name = "lblAuthorized";
             this.lblAuthorized.Size = new System.Drawing.Size(400, 20);
-            this.lblAuthorized.TabIndex = 12;
-            this.lblAuthorized.Text = "🔒 AUTHORIZED PERSONNEL ONLY";
+            this.lblAuthorized.TabIndex = 13;
+            this.lblAuthorized.Text = "AUTHORIZED PERSONNEL ONLY";
             this.lblAuthorized.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblCopyright
             // 
             this.lblCopyright.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lblCopyright.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.lblCopyright.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.lblCopyright.ForeColor = System.Drawing.Color.FromArgb(100, 100, 100);
             this.lblCopyright.Location = new System.Drawing.Point(0, 580);
             this.lblCopyright.Name = "lblCopyright";
             this.lblCopyright.Size = new System.Drawing.Size(800, 20);
             this.lblCopyright.TabIndex = 1;
-            this.lblCopyright.Text = "© 2026 HOSPITAL MANAGEMENT SYSTEM. FISALIA TEAM.";
+            this.lblCopyright.Text = "© 2026 HOSPITAL MANAGEMENT SYSTEM";
             this.lblCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblCopyright.Click += new System.EventHandler(this.lblCopyright_Click);
             // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(210)))), ((int)(((byte)(200)))));
+            this.BackColor = System.Drawing.Color.FromArgb(200, 210, 200);
             this.ClientSize = new System.Drawing.Size(800, 600);
             this.Controls.Add(this.pnlCard);
             this.Controls.Add(this.lblCopyright);
@@ -279,7 +266,6 @@ namespace Hospital_Management.Views
             this.pnlCard.ResumeLayout(false);
             this.pnlCard.PerformLayout();
             this.ResumeLayout(false);
-
         }
 
         #endregion
@@ -294,11 +280,11 @@ namespace Hospital_Management.Views
         private System.Windows.Forms.ComboBox cmbDepartment;
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.TextBox txtPassword;
+        private System.Windows.Forms.Button btnTogglePassword;
         private System.Windows.Forms.CheckBox chkTrustedDevice;
         private System.Windows.Forms.LinkLabel lblForgotPassword;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Label lblAuthorized;
         private System.Windows.Forms.Label lblCopyright;
-        private System.Windows.Forms.Button btnTogglePassword;
     }
 }
