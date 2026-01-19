@@ -24,8 +24,6 @@ namespace Hospital_Management.Views
             this.btnSave = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-
-            // Form fields
             this.lblType = new System.Windows.Forms.Label();
             this.cmbType = new System.Windows.Forms.ComboBox();
             this.lblCategory = new System.Windows.Forms.Label();
@@ -36,14 +34,14 @@ namespace Hospital_Management.Views
             this.dtpTransactionDate = new System.Windows.Forms.DateTimePicker();
             this.lblDescription = new System.Windows.Forms.Label();
             this.txtDescription = new System.Windows.Forms.TextBox();
-
             this.pnlHeader.SuspendLayout();
             this.pnlContent.SuspendLayout();
             this.pnlFooter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAmount)).BeginInit();
             this.SuspendLayout();
-
+            // 
             // pnlHeader
+            // 
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(0, 122, 204);
             this.pnlHeader.Controls.Add(this.lblTitle);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
@@ -51,75 +49,139 @@ namespace Hospital_Management.Views
             this.pnlHeader.Name = "pnlHeader";
             this.pnlHeader.Size = new System.Drawing.Size(400, 50);
             this.pnlHeader.TabIndex = 0;
-
+            // 
             // lblTitle
+            // 
             this.lblTitle.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 14F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.White;
+            this.lblTitle.Location = new System.Drawing.Point(0, 0);
             this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(400, 50);
+            this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Add New Transaction";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // pnlContent
+            // 
             this.pnlContent.BackColor = System.Drawing.Color.FromArgb(45, 45, 48);
+            this.pnlContent.Controls.Add(this.lblType);
+            this.pnlContent.Controls.Add(this.cmbType);
+            this.pnlContent.Controls.Add(this.lblCategory);
+            this.pnlContent.Controls.Add(this.cmbCategory);
+            this.pnlContent.Controls.Add(this.lblAmount);
+            this.pnlContent.Controls.Add(this.numAmount);
+            this.pnlContent.Controls.Add(this.lblTransactionDate);
+            this.pnlContent.Controls.Add(this.dtpTransactionDate);
+            this.pnlContent.Controls.Add(this.lblDescription);
+            this.pnlContent.Controls.Add(this.txtDescription);
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContent.Location = new System.Drawing.Point(0, 50);
             this.pnlContent.Name = "pnlContent";
             this.pnlContent.Padding = new System.Windows.Forms.Padding(20);
             this.pnlContent.Size = new System.Drawing.Size(400, 250);
             this.pnlContent.TabIndex = 1;
-
-            int y = 10;
-            int labelWidth = 100;
-            int fieldWidth = 250;
-            int rowHeight = 40;
-
-            // Type
-            SetupLabel(lblType, "Type:", 20, y, labelWidth);
-            this.cmbType.Location = new System.Drawing.Point(130, y);
-            this.cmbType.Size = new System.Drawing.Size(150, 25);
-            this.cmbType.Font = new System.Drawing.Font("Segoe UI", 10F);
+            // 
+            // lblType
+            // 
+            this.lblType.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblType.ForeColor = System.Drawing.Color.White;
+            this.lblType.Location = new System.Drawing.Point(20, 13);
+            this.lblType.Name = "lblType";
+            this.lblType.Size = new System.Drawing.Size(100, 20);
+            this.lblType.TabIndex = 0;
+            this.lblType.Text = "Type:";
+            // 
+            // cmbType
+            // 
             this.cmbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            y += rowHeight;
-
-            // Category
-            SetupLabel(lblCategory, "Category:", 20, y, labelWidth);
-            this.cmbCategory.Location = new System.Drawing.Point(130, y);
-            this.cmbCategory.Size = new System.Drawing.Size(fieldWidth, 25);
+            this.cmbType.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.cmbType.FormattingEnabled = true;
+            this.cmbType.Items.AddRange(new object[] { "Income", "Expense" });
+            this.cmbType.Location = new System.Drawing.Point(130, 10);
+            this.cmbType.Name = "cmbType";
+            this.cmbType.Size = new System.Drawing.Size(150, 25);
+            this.cmbType.TabIndex = 1;
+            // 
+            // lblCategory
+            // 
+            this.lblCategory.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblCategory.ForeColor = System.Drawing.Color.White;
+            this.lblCategory.Location = new System.Drawing.Point(20, 53);
+            this.lblCategory.Name = "lblCategory";
+            this.lblCategory.Size = new System.Drawing.Size(100, 20);
+            this.lblCategory.TabIndex = 2;
+            this.lblCategory.Text = "Category:";
+            // 
+            // cmbCategory
+            // 
             this.cmbCategory.Font = new System.Drawing.Font("Segoe UI", 10F);
-            y += rowHeight;
-
-            // Amount
-            SetupLabel(lblAmount, "Amount (Rp):", 20, y, labelWidth);
-            this.numAmount.Location = new System.Drawing.Point(130, y);
-            this.numAmount.Size = new System.Drawing.Size(fieldWidth, 25);
-            this.numAmount.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.numAmount.Maximum = 99999999999;
+            this.cmbCategory.FormattingEnabled = true;
+            this.cmbCategory.Location = new System.Drawing.Point(130, 50);
+            this.cmbCategory.Name = "cmbCategory";
+            this.cmbCategory.Size = new System.Drawing.Size(250, 25);
+            this.cmbCategory.TabIndex = 3;
+            // 
+            // lblAmount
+            // 
+            this.lblAmount.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblAmount.ForeColor = System.Drawing.Color.White;
+            this.lblAmount.Location = new System.Drawing.Point(20, 93);
+            this.lblAmount.Name = "lblAmount";
+            this.lblAmount.Size = new System.Drawing.Size(100, 20);
+            this.lblAmount.TabIndex = 4;
+            this.lblAmount.Text = "Amount (Rp):";
+            // 
+            // numAmount
+            // 
             this.numAmount.DecimalPlaces = 2;
+            this.numAmount.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.numAmount.Location = new System.Drawing.Point(130, 90);
+            this.numAmount.Maximum = new decimal(new int[] { -1530494977, 232830, 0, 0 });
+            this.numAmount.Name = "numAmount";
+            this.numAmount.Size = new System.Drawing.Size(250, 25);
+            this.numAmount.TabIndex = 5;
             this.numAmount.ThousandsSeparator = true;
-            y += rowHeight;
-
-            // Transaction Date
-            SetupLabel(lblTransactionDate, "Date:", 20, y, labelWidth);
-            this.dtpTransactionDate.Location = new System.Drawing.Point(130, y);
-            this.dtpTransactionDate.Size = new System.Drawing.Size(fieldWidth, 25);
+            // 
+            // lblTransactionDate
+            // 
+            this.lblTransactionDate.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblTransactionDate.ForeColor = System.Drawing.Color.White;
+            this.lblTransactionDate.Location = new System.Drawing.Point(20, 133);
+            this.lblTransactionDate.Name = "lblTransactionDate";
+            this.lblTransactionDate.Size = new System.Drawing.Size(100, 20);
+            this.lblTransactionDate.TabIndex = 6;
+            this.lblTransactionDate.Text = "Date:";
+            // 
+            // dtpTransactionDate
+            // 
             this.dtpTransactionDate.Font = new System.Drawing.Font("Segoe UI", 10F);
-            y += rowHeight;
-
-            // Description
-            SetupLabel(lblDescription, "Description:", 20, y, labelWidth);
-            this.txtDescription.Location = new System.Drawing.Point(130, y);
-            this.txtDescription.Size = new System.Drawing.Size(fieldWidth, 60);
+            this.dtpTransactionDate.Location = new System.Drawing.Point(130, 130);
+            this.dtpTransactionDate.Name = "dtpTransactionDate";
+            this.dtpTransactionDate.Size = new System.Drawing.Size(250, 25);
+            this.dtpTransactionDate.TabIndex = 7;
+            // 
+            // lblDescription
+            // 
+            this.lblDescription.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblDescription.ForeColor = System.Drawing.Color.White;
+            this.lblDescription.Location = new System.Drawing.Point(20, 173);
+            this.lblDescription.Name = "lblDescription";
+            this.lblDescription.Size = new System.Drawing.Size(100, 20);
+            this.lblDescription.TabIndex = 8;
+            this.lblDescription.Text = "Description:";
+            // 
+            // txtDescription
+            // 
             this.txtDescription.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.txtDescription.Location = new System.Drawing.Point(130, 170);
             this.txtDescription.Multiline = true;
-
-            // Add controls to pnlContent
-            this.pnlContent.Controls.AddRange(new System.Windows.Forms.Control[] {
-                lblType, cmbType, lblCategory, cmbCategory, lblAmount, numAmount,
-                lblTransactionDate, dtpTransactionDate, lblDescription, txtDescription
-            });
-
+            this.txtDescription.Name = "txtDescription";
+            this.txtDescription.Size = new System.Drawing.Size(250, 60);
+            this.txtDescription.TabIndex = 9;
+            // 
             // pnlFooter
+            // 
             this.pnlFooter.BackColor = System.Drawing.Color.FromArgb(45, 45, 48);
             this.pnlFooter.Controls.Add(this.btnSave);
             this.pnlFooter.Controls.Add(this.btnClear);
@@ -129,8 +191,9 @@ namespace Hospital_Management.Views
             this.pnlFooter.Name = "pnlFooter";
             this.pnlFooter.Size = new System.Drawing.Size(400, 50);
             this.pnlFooter.TabIndex = 2;
-
+            // 
             // btnSave
+            // 
             this.btnSave.BackColor = System.Drawing.Color.FromArgb(0, 122, 204);
             this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSave.FlatAppearance.BorderSize = 0;
@@ -140,11 +203,13 @@ namespace Hospital_Management.Views
             this.btnSave.Location = new System.Drawing.Point(295, 10);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(90, 32);
+            this.btnSave.TabIndex = 0;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-
+            // 
             // btnClear
+            // 
             this.btnClear.BackColor = System.Drawing.Color.FromArgb(80, 80, 85);
             this.btnClear.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnClear.FlatAppearance.BorderSize = 0;
@@ -154,11 +219,13 @@ namespace Hospital_Management.Views
             this.btnClear.Location = new System.Drawing.Point(195, 10);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(90, 32);
+            this.btnClear.TabIndex = 1;
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = false;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
-
+            // 
             // btnCancel
+            // 
             this.btnCancel.BackColor = System.Drawing.Color.FromArgb(80, 80, 85);
             this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCancel.FlatAppearance.BorderSize = 0;
@@ -168,11 +235,13 @@ namespace Hospital_Management.Views
             this.btnCancel.Location = new System.Drawing.Point(15, 10);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(90, 32);
+            this.btnCancel.TabIndex = 2;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-
+            // 
             // AddCapitalForm
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(45, 45, 48);
@@ -186,23 +255,12 @@ namespace Hospital_Management.Views
             this.Name = "AddCapitalForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add Transaction - Hospital Management System";
-
             this.pnlHeader.ResumeLayout(false);
             this.pnlContent.ResumeLayout(false);
             this.pnlContent.PerformLayout();
             this.pnlFooter.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numAmount)).EndInit();
             this.ResumeLayout(false);
-        }
-
-        private void SetupLabel(System.Windows.Forms.Label lbl, string text, int x, int y, int width)
-        {
-            lbl.AutoSize = false;
-            lbl.Text = text;
-            lbl.Location = new System.Drawing.Point(x, y + 3);
-            lbl.Size = new System.Drawing.Size(width, 20);
-            lbl.Font = new System.Drawing.Font("Segoe UI", 10F);
-            lbl.ForeColor = System.Drawing.Color.White;
         }
 
         #endregion
@@ -214,7 +272,6 @@ namespace Hospital_Management.Views
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnCancel;
-
         private System.Windows.Forms.Label lblType;
         private System.Windows.Forms.ComboBox cmbType;
         private System.Windows.Forms.Label lblCategory;

@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "D:\\Kegabutan\\Hospital Management\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|d:\\kegabutan\\hospital management\\views\\addunitform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|solutionrelative:views\\addunitform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|d:\\kegabutan\\hospital management\\views\\capitalform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|solutionrelative:views\\capitalform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|d:\\kegabutan\\hospital management\\views\\splashform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|solutionrelative:views\\splashform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
@@ -27,6 +35,30 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "AddUnitForm.cs [Design]",
+              "DocumentMoniker": "D:\\Kegabutan\\Hospital Management\\Views\\AddUnitForm.cs",
+              "RelativeDocumentMoniker": "Views\\AddUnitForm.cs",
+              "ToolTip": "D:\\Kegabutan\\Hospital Management\\Views\\AddUnitForm.cs [Design]",
+              "RelativeToolTip": "Views\\AddUnitForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-19T06:30:08.309Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CapitalForm.cs [Design]",
+              "DocumentMoniker": "D:\\Kegabutan\\Hospital Management\\Views\\CapitalForm.cs",
+              "RelativeDocumentMoniker": "Views\\CapitalForm.cs",
+              "ToolTip": "D:\\Kegabutan\\Hospital Management\\Views\\CapitalForm.cs [Design]",
+              "RelativeToolTip": "Views\\CapitalForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-19T06:29:50.477Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "SplashForm.cs [Design]",
               "DocumentMoniker": "D:\\Kegabutan\\Hospital Management\\Views\\SplashForm.cs",
               "RelativeDocumentMoniker": "Views\\SplashForm.cs",
@@ -38,7 +70,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Form1.cs [Design]",
               "DocumentMoniker": "D:\\Kegabutan\\Hospital Management\\Views\\Form1.cs",
               "RelativeDocumentMoniker": "Views\\Form1.cs",
