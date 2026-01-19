@@ -1,8 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Kegabutan\\Hospital Management\\",
+  "WorkspaceRootPath": "C:\\Users\\nurfa\\source\\repos\\Hospital-Management-Desktop\\",
   "Documents": [
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|d:\\kegabutan\\hospital management\\views\\addcapitalform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|solutionrelative:views\\addcapitalform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -19,6 +20,28 @@
       "RelativeMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|solutionrelative:views\\addstaffform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
+=======
+<<<<<<< HEAD
+      "AbsoluteMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|c:\\users\\nurfa\\source\\repos\\hospital-management-desktop\\views\\addpatientform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|solutionrelative:views\\addpatientform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|c:\\users\\nurfa\\source\\repos\\hospital-management-desktop\\views\\patientform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|solutionrelative:views\\patientform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|c:\\users\\nurfa\\source\\repos\\hospital-management-desktop\\views\\homeform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|solutionrelative:views\\homeform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|c:\\users\\nurfa\\source\\repos\\hospital-management-desktop\\views\\splashform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|solutionrelative:views\\splashform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|C:\\Users\\nurfa\\source\\repos\\Hospital-Management-Desktop\\views\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|solutionrelative:views\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+=======
+>>>>>>> 39f813d853e2ced365bbd5c70647bc46b8c5fd10
       "AbsoluteMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|d:\\kegabutan\\hospital management\\views\\addpatientform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|solutionrelative:views\\addpatientform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
@@ -33,6 +56,7 @@
     {
       "AbsoluteMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|d:\\kegabutan\\hospital management\\views\\capitalform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{8519B29B-FB9D-4EA0-8ADA-7FAFA5ACB673}|Hospital Management.csproj|solutionrelative:views\\capitalform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+>>>>>>> f03d9125f17f707dccf24ee3d657a6c8b646fbbc
     }
   ],
   "DocumentGroupContainers": [
@@ -42,7 +66,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
+<<<<<<< HEAD
           "SelectedChildIndex": 6,
+=======
+          "SelectedChildIndex": 3,
+>>>>>>> 39f813d853e2ced365bbd5c70647bc46b8c5fd10
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,6 +78,7 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 1,
               "Title": "AddCapitalForm.resx",
               "DocumentMoniker": "D:\\Kegabutan\\Hospital Management\\Views\\AddCapitalForm.resx",
@@ -70,10 +99,21 @@
               "RelativeToolTip": "Views\\SplashForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-19T06:49:40.471Z",
+=======
+              "DocumentIndex": 2,
+              "Title": "HomeForm.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\nurfa\\source\\repos\\Hospital-Management-Desktop\\Views\\HomeForm.cs",
+              "RelativeDocumentMoniker": "Views\\HomeForm.cs",
+              "ToolTip": "C:\\Users\\nurfa\\source\\repos\\Hospital-Management-Desktop\\Views\\HomeForm.cs [Design]",
+              "RelativeToolTip": "Views\\HomeForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-19T06:30:10.192Z",
+>>>>>>> 39f813d853e2ced365bbd5c70647bc46b8c5fd10
               "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 3,
               "Title": "AddStaffForm.cs [Design]",
               "DocumentMoniker": "D:\\Kegabutan\\Hospital Management\\Views\\AddStaffForm.cs",
@@ -82,23 +122,70 @@
               "RelativeToolTip": "Views\\AddStaffForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-19T06:46:13.889Z",
+=======
+              "DocumentIndex": 1,
+              "Title": "PatientForm.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\nurfa\\source\\repos\\Hospital-Management-Desktop\\Views\\PatientForm.cs",
+              "RelativeDocumentMoniker": "Views\\PatientForm.cs",
+              "ToolTip": "C:\\Users\\nurfa\\source\\repos\\Hospital-Management-Desktop\\Views\\PatientForm.cs [Design]",
+              "RelativeToolTip": "Views\\PatientForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-19T06:22:24.268Z",
+>>>>>>> 39f813d853e2ced365bbd5c70647bc46b8c5fd10
               "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 4,
+=======
+              "DocumentIndex": 0,
+>>>>>>> 39f813d853e2ced365bbd5c70647bc46b8c5fd10
               "Title": "AddPatientForm.cs [Design]",
+<<<<<<< HEAD
+              "DocumentMoniker": "C:\\Users\\nurfa\\source\\repos\\Hospital-Management-Desktop\\Views\\AddPatientForm.cs",
+              "RelativeDocumentMoniker": "Views\\AddPatientForm.cs",
+              "ToolTip": "C:\\Users\\nurfa\\source\\repos\\Hospital-Management-Desktop\\Views\\AddPatientForm.cs [Design]",
+              "RelativeToolTip": "Views\\AddPatientForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-19T06:22:03.331Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SplashForm.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\nurfa\\source\\repos\\Hospital-Management-Desktop\\Views\\SplashForm.cs",
+              "RelativeDocumentMoniker": "Views\\SplashForm.cs",
+              "ToolTip": "C:\\Users\\nurfa\\source\\repos\\Hospital-Management-Desktop\\Views\\SplashForm.cs [Design]",
+              "RelativeToolTip": "Views\\SplashForm.cs [Design]",
+=======
               "DocumentMoniker": "D:\\Kegabutan\\Hospital Management\\Views\\AddPatientForm.cs",
               "RelativeDocumentMoniker": "Views\\AddPatientForm.cs",
               "ToolTip": "D:\\Kegabutan\\Hospital Management\\Views\\AddPatientForm.cs [Design]",
               "RelativeToolTip": "Views\\AddPatientForm.cs [Design]",
+>>>>>>> f03d9125f17f707dccf24ee3d657a6c8b646fbbc
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-19T06:34:03.391Z",
               "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 5,
+=======
+<<<<<<< HEAD
+              "DocumentIndex": 4,
+              "Title": "Form1.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\nurfa\\source\\repos\\Hospital-Management-Desktop\\Views\\Form1.cs",
+              "RelativeDocumentMoniker": "Views\\Form1.cs",
+              "ToolTip": "C:\\Users\\nurfa\\source\\repos\\Hospital-Management-Desktop\\Views\\Form1.cs [Design]",
+              "RelativeToolTip": "Views\\Form1.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-12T07:42:49.944Z",
+=======
+              "DocumentIndex": 1,
+>>>>>>> 39f813d853e2ced365bbd5c70647bc46b8c5fd10
               "Title": "AddUnitForm.cs",
               "DocumentMoniker": "D:\\Kegabutan\\Hospital Management\\Views\\AddUnitForm.cs",
               "RelativeDocumentMoniker": "Views\\AddUnitForm.cs",
@@ -144,6 +231,7 @@
               "RelativeToolTip": "Views\\CapitalForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-19T06:29:50.477Z",
+>>>>>>> f03d9125f17f707dccf24ee3d657a6c8b646fbbc
               "EditorCaption": " [Design]"
             }
           ]
