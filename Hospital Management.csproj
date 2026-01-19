@@ -138,6 +138,54 @@
     <Compile Include="Views\AddStaffForm.Designer.cs">
       <DependentUpon>AddStaffForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\PatientForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\PatientForm.Designer.cs">
+      <DependentUpon>PatientForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddPatientForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\AddPatientForm.Designer.cs">
+      <DependentUpon>AddPatientForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LaboratoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\LaboratoryForm.Designer.cs">
+      <DependentUpon>LaboratoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddLaboratoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\AddLaboratoryForm.Designer.cs">
+      <DependentUpon>AddLaboratoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CapitalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\CapitalForm.Designer.cs">
+      <DependentUpon>CapitalForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddCapitalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\AddCapitalForm.Designer.cs">
+      <DependentUpon>AddCapitalForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UnitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\UnitForm.Designer.cs">
+      <DependentUpon>UnitForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddUnitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\AddUnitForm.Designer.cs">
+      <DependentUpon>AddUnitForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Helpers\DatabaseHelper.cs" />
     <Compile Include="Program.cs" />
@@ -162,6 +210,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\AddStaffForm.resx">
       <DependentUpon>AddStaffForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\PatientForm.resx">
+      <DependentUpon>PatientForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\AddPatientForm.resx">
+      <DependentUpon>AddPatientForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\LaboratoryForm.resx">
+      <DependentUpon>LaboratoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\AddLaboratoryForm.resx">
+      <DependentUpon>AddLaboratoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CapitalForm.resx">
+      <DependentUpon>CapitalForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\AddCapitalForm.resx">
+      <DependentUpon>AddCapitalForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\UnitForm.resx">
+      <DependentUpon>UnitForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\AddUnitForm.resx">
+      <DependentUpon>AddUnitForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

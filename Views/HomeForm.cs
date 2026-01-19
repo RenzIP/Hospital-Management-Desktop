@@ -139,25 +139,29 @@ namespace Hospital_Management.Views
         private void pnlMenuPatients_Click(object sender, EventArgs e)
         {
             HighlightSelectedMenu("Patients");
-            MessageBox.Show("Patients Management - Coming Soon", "Navigation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            PatientForm patientForm = new PatientForm();
+            patientForm.ShowDialog();
         }
 
         private void pnlMenuLaboratory_Click(object sender, EventArgs e)
         {
             HighlightSelectedMenu("Laboratory");
-            MessageBox.Show("Laboratory Management - Coming Soon", "Navigation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            LaboratoryForm laboratoryForm = new LaboratoryForm();
+            laboratoryForm.ShowDialog();
         }
 
         private void pnlMenuCapital_Click(object sender, EventArgs e)
         {
             HighlightSelectedMenu("Capital");
-            MessageBox.Show("Capital Management - Coming Soon", "Navigation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            CapitalForm capitalForm = new CapitalForm();
+            capitalForm.ShowDialog();
         }
 
         private void pnlMenuUnits_Click(object sender, EventArgs e)
         {
             HighlightSelectedMenu("Units");
-            MessageBox.Show("Units Management - Coming Soon", "Navigation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UnitForm unitForm = new UnitForm();
+            unitForm.ShowDialog();
         }
 
         private void pnlMenuExit_Click(object sender, EventArgs e)

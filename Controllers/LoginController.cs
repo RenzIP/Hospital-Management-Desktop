@@ -56,7 +56,7 @@ namespace Hospital_Management.Controllers
                         }
                     }
                 }
-            }z
+            }
             catch (Exception ex)
             {
                 // Log error (in production, use proper logging)
