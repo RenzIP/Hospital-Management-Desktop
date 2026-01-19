@@ -186,6 +186,24 @@
     <Compile Include="Views\AddUnitForm.Designer.cs">
       <DependentUpon>AddUnitForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\HomeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\StaffControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\PatientControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\LaboratoryControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\CapitalControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\UnitControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Helpers\DatabaseHelper.cs" />
     <Compile Include="Program.cs" />
