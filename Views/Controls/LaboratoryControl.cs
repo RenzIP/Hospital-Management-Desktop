@@ -2,14 +2,21 @@ using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 using Hospital_Management.Helpers;
+using MySql.Data.MySqlClient;
 
 namespace Hospital_Management.Views.Controls
 {
     public partial class LaboratoryControl : UserControl
     {
         private DataTable labDataTable;
+
+        private Color bgColor = Color.FromArgb(38, 70, 77);
+        private Color headerBg = Color.FromArgb(29, 53, 58);
+        private Color cardBg = Color.FromArgb(45, 85, 93);
+        private Color accentColor = Color.FromArgb(0, 173, 181);
+        private Color textColor = Color.White;
+        private Color rowAlt = Color.FromArgb(52, 95, 105);
 
         public LaboratoryControl()
         {
@@ -21,153 +28,130 @@ namespace Hospital_Management.Views.Controls
         {
             this.pnlHeader = new Panel();
             this.lblTitle = new Label();
+            this.lblIcon = new Label();
             this.pnlSearch = new Panel();
-            this.lblSearch = new Label();
+            this.lblSearchLabel = new Label();
             this.txtSearch = new TextBox();
-            this.cmbStatusFilter = new ComboBox();
             this.dgvLaboratory = new DataGridView();
             this.pnlFooter = new Panel();
-            this.btnAddTest = new Button();
+            this.btnAdd = new Button();
+            this.btnEdit = new Button();
+            this.btnDelete = new Button();
+            this.btnRefresh = new Button();
+            this.lblStatus = new Label();
 
-            this.pnlHeader.SuspendLayout();
-            this.pnlSearch.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvLaboratory)).BeginInit();
-            this.pnlFooter.SuspendLayout();
             this.SuspendLayout();
-
-            // LaboratoryControl
-            this.BackColor = Color.FromArgb(45, 45, 48);
+            this.BackColor = bgColor;
             this.Dock = DockStyle.Fill;
-            this.Size = new Size(720, 600);
 
-            // pnlHeader
-            this.pnlHeader.BackColor = Color.FromArgb(45, 45, 48);
-            this.pnlHeader.Controls.Add(this.lblTitle);
+            // Header
+            this.pnlHeader.BackColor = headerBg;
             this.pnlHeader.Dock = DockStyle.Top;
-            this.pnlHeader.Location = new Point(0, 0);
-            this.pnlHeader.Size = new Size(720, 60);
+            this.pnlHeader.Size = new Size(800, 60);
 
-            // lblTitle
-            this.lblTitle.Dock = DockStyle.Fill;
-            this.lblTitle.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold);
-            this.lblTitle.ForeColor = Color.White;
-            this.lblTitle.Text = "🔬 Laboratory Management";
-            this.lblTitle.TextAlign = ContentAlignment.MiddleCenter;
+            this.lblIcon.Font = new Font("Segoe UI", 24F);
+            this.lblIcon.ForeColor = accentColor;
+            this.lblIcon.Location = new Point(20, 12);
+            this.lblIcon.Size = new Size(50, 40);
+            this.lblIcon.Text = "🔬";
 
-            // pnlSearch
-            this.pnlSearch.BackColor = Color.FromArgb(55, 55, 60);
-            this.pnlSearch.Controls.Add(this.cmbStatusFilter);
-            this.pnlSearch.Controls.Add(this.lblSearch);
-            this.pnlSearch.Controls.Add(this.txtSearch);
+            this.lblTitle.Font = new Font("Segoe UI Semibold", 18F);
+            this.lblTitle.ForeColor = textColor;
+            this.lblTitle.Location = new Point(70, 15);
+            this.lblTitle.Size = new Size(350, 35);
+            this.lblTitle.Text = "Laboratory Management";
+
+            this.pnlHeader.Controls.AddRange(new Control[] { lblIcon, lblTitle });
+
+            // Search
+            this.pnlSearch.BackColor = headerBg;
             this.pnlSearch.Dock = DockStyle.Top;
-            this.pnlSearch.Location = new Point(0, 60);
-            this.pnlSearch.Size = new Size(720, 50);
+            this.pnlSearch.Size = new Size(800, 50);
 
-            // cmbStatusFilter
-            this.cmbStatusFilter.BackColor = Color.White;
-            this.cmbStatusFilter.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cmbStatusFilter.Font = new Font("Segoe UI", 10F);
-            this.cmbStatusFilter.Location = new Point(15, 12);
-            this.cmbStatusFilter.Size = new Size(130, 25);
-            this.cmbStatusFilter.Items.AddRange(new object[] { "All Status", "completed", "pending", "in_progress" });
-            this.cmbStatusFilter.SelectedIndex = 0;
-            this.cmbStatusFilter.SelectedIndexChanged += cmbStatusFilter_SelectedIndexChanged;
+            this.lblSearchLabel.Font = new Font("Segoe UI", 10F);
+            this.lblSearchLabel.ForeColor = Color.FromArgb(150, 170, 180);
+            this.lblSearchLabel.Location = new Point(20, 15);
+            this.lblSearchLabel.Size = new Size(60, 20);
+            this.lblSearchLabel.Text = "Search:";
 
-            // lblSearch
-            this.lblSearch.AutoSize = true;
-            this.lblSearch.Font = new Font("Segoe UI", 10F);
-            this.lblSearch.ForeColor = Color.White;
-            this.lblSearch.Location = new Point(480, 15);
-            this.lblSearch.Text = "Search:";
+            this.txtSearch.BackColor = cardBg;
+            this.txtSearch.BorderStyle = BorderStyle.None;
+            this.txtSearch.Font = new Font("Segoe UI", 11F);
+            this.txtSearch.ForeColor = textColor;
+            this.txtSearch.Location = new Point(85, 13);
+            this.txtSearch.Size = new Size(300, 25);
+            this.txtSearch.TextChanged += TxtSearch_TextChanged;
 
-            // txtSearch
-            this.txtSearch.BackColor = Color.White;
-            this.txtSearch.BorderStyle = BorderStyle.FixedSingle;
-            this.txtSearch.Font = new Font("Segoe UI", 10F);
-            this.txtSearch.Location = new Point(540, 12);
-            this.txtSearch.Size = new Size(165, 25);
-            this.txtSearch.TextChanged += txtSearch_TextChanged;
+            this.pnlSearch.Controls.AddRange(new Control[] { lblSearchLabel, txtSearch });
 
-            // dgvLaboratory
+            // DataGridView
             this.dgvLaboratory.AllowUserToAddRows = false;
             this.dgvLaboratory.AllowUserToDeleteRows = false;
             this.dgvLaboratory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvLaboratory.BackgroundColor = Color.FromArgb(45, 45, 48);
+            this.dgvLaboratory.BackgroundColor = bgColor;
             this.dgvLaboratory.BorderStyle = BorderStyle.None;
             this.dgvLaboratory.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             this.dgvLaboratory.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            this.dgvLaboratory.ColumnHeadersDefaultCellStyle = GetHeaderStyle();
-            this.dgvLaboratory.ColumnHeadersHeight = 40;
-            this.dgvLaboratory.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.dgvLaboratory.DefaultCellStyle = GetCellStyle();
+            this.dgvLaboratory.ColumnHeadersHeight = 45;
+            this.dgvLaboratory.DefaultCellStyle.BackColor = cardBg;
+            this.dgvLaboratory.DefaultCellStyle.ForeColor = textColor;
+            this.dgvLaboratory.DefaultCellStyle.SelectionBackColor = accentColor;
+            this.dgvLaboratory.DefaultCellStyle.Font = new Font("Segoe UI", 10F);
+            this.dgvLaboratory.DefaultCellStyle.Padding = new Padding(5);
             this.dgvLaboratory.Dock = DockStyle.Fill;
             this.dgvLaboratory.EnableHeadersVisualStyles = false;
-            this.dgvLaboratory.GridColor = Color.FromArgb(60, 60, 65);
-            this.dgvLaboratory.Location = new Point(0, 110);
-            this.dgvLaboratory.MultiSelect = false;
+            this.dgvLaboratory.GridColor = Color.FromArgb(60, 100, 110);
+            this.dgvLaboratory.ColumnHeadersDefaultCellStyle.BackColor = headerBg;
+            this.dgvLaboratory.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(180, 200, 210);
+            this.dgvLaboratory.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 10F);
             this.dgvLaboratory.ReadOnly = true;
             this.dgvLaboratory.RowHeadersVisible = false;
-            this.dgvLaboratory.RowTemplate.Height = 40;
+            this.dgvLaboratory.RowTemplate.Height = 45;
             this.dgvLaboratory.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            this.dgvLaboratory.Size = new Size(720, 430);
-            this.dgvLaboratory.CellClick += dgvLaboratory_CellClick;
+            this.dgvLaboratory.AlternatingRowsDefaultCellStyle.BackColor = rowAlt;
 
-            // pnlFooter
-            this.pnlFooter.BackColor = Color.FromArgb(55, 55, 60);
-            this.pnlFooter.Controls.Add(this.btnAddTest);
+            // Footer
+            this.pnlFooter.BackColor = headerBg;
             this.pnlFooter.Dock = DockStyle.Bottom;
-            this.pnlFooter.Location = new Point(0, 540);
-            this.pnlFooter.Size = new Size(720, 60);
+            this.pnlFooter.Size = new Size(800, 60);
 
-            // btnAddTest
-            this.btnAddTest.BackColor = Color.FromArgb(255, 193, 7);
-            this.btnAddTest.Cursor = Cursors.Hand;
-            this.btnAddTest.FlatAppearance.BorderSize = 0;
-            this.btnAddTest.FlatStyle = FlatStyle.Flat;
-            this.btnAddTest.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
-            this.btnAddTest.ForeColor = Color.Black;
-            this.btnAddTest.Location = new Point(580, 12);
-            this.btnAddTest.Size = new Size(125, 36);
-            this.btnAddTest.Text = "+ Add Test";
-            this.btnAddTest.Click += btnAddTest_Click;
+            CreateButton(btnAdd, "➕ Add", Color.FromArgb(0, 150, 136), 20);
+            CreateButton(btnEdit, "✏️ Edit", Color.FromArgb(33, 150, 243), 120);
+            CreateButton(btnDelete, "🗑️ Delete", Color.FromArgb(211, 47, 47), 220);
+            CreateButton(btnRefresh, "🔄", Color.FromArgb(100, 130, 140), 330);
+            btnRefresh.Size = new Size(45, 36);
 
-            this.Controls.Add(this.dgvLaboratory);
-            this.Controls.Add(this.pnlFooter);
-            this.Controls.Add(this.pnlSearch);
-            this.Controls.Add(this.pnlHeader);
+            this.lblStatus.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            this.lblStatus.Font = new Font("Segoe UI", 9F);
+            this.lblStatus.ForeColor = Color.FromArgb(100, 220, 130);
+            this.lblStatus.Location = new Point(500, 20);
+            this.lblStatus.Size = new Size(280, 20);
+            this.lblStatus.Text = "● System Online | " + DateTime.Now.ToString("HH:mm");
+            this.lblStatus.TextAlign = ContentAlignment.MiddleRight;
 
-            this.pnlHeader.ResumeLayout(false);
-            this.pnlSearch.ResumeLayout(false);
-            this.pnlSearch.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvLaboratory)).EndInit();
-            this.pnlFooter.ResumeLayout(false);
+            btnRefresh.Click += (s, e) => LoadLabData();
+
+            this.pnlFooter.Controls.AddRange(new Control[] { btnAdd, btnEdit, btnDelete, btnRefresh, lblStatus });
+
+            this.Controls.Add(dgvLaboratory);
+            this.Controls.Add(pnlSearch);
+            this.Controls.Add(pnlHeader);
+            this.Controls.Add(pnlFooter);
+
             this.ResumeLayout(false);
         }
 
-        private DataGridViewCellStyle GetHeaderStyle()
+        private void CreateButton(Button btn, string text, Color bg, int x)
         {
-            DataGridViewCellStyle style = new DataGridViewCellStyle();
-            style.BackColor = Color.FromArgb(26, 163, 168);
-            style.ForeColor = Color.White;
-            style.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
-            style.SelectionBackColor = Color.FromArgb(26, 163, 168);
-            style.SelectionForeColor = Color.White;
-            style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            style.Padding = new Padding(10, 0, 0, 0);
-            return style;
-        }
-
-        private DataGridViewCellStyle GetCellStyle()
-        {
-            DataGridViewCellStyle style = new DataGridViewCellStyle();
-            style.BackColor = Color.FromArgb(50, 50, 55);
-            style.ForeColor = Color.White;
-            style.Font = new Font("Segoe UI", 10F);
-            style.SelectionBackColor = Color.FromArgb(0, 122, 204);
-            style.SelectionForeColor = Color.White;
-            style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            style.Padding = new Padding(10, 0, 0, 0);
-            return style;
+            btn.BackColor = bg;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.Font = new Font("Segoe UI", 10F);
+            btn.ForeColor = Color.White;
+            btn.Location = new Point(x, 12);
+            btn.Size = new Size(90, 36);
+            btn.Text = text;
+            btn.Cursor = Cursors.Hand;
         }
 
         public void LoadLabData()
@@ -177,179 +161,47 @@ namespace Hospital_Management.Views.Controls
                 using (var connection = DatabaseHelper.Instance.GetConnection())
                 {
                     connection.Open();
-                    string query = @"SELECT l.lab_id as 'Lab ID', p.name as 'Patient', s.name as 'Doctor', 
-                                     l.test_name as 'Test Name', l.test_date as 'Test Date', l.status as 'Status'
-                                     FROM laboratory l 
-                                     LEFT JOIN patients p ON l.patient_id = p.id
-                                     LEFT JOIN staff s ON l.doctor_id = s.id
-                                     ORDER BY l.test_date DESC";
+                    string query = @"SELECT lab_id as 'Lab ID', test_name as 'Test Name', patient_name as 'Patient', 
+                                   test_date as 'Date', status as 'Status' FROM laboratory ORDER BY test_date DESC";
                     MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
                     labDataTable = new DataTable();
                     adapter.Fill(labDataTable);
                     dgvLaboratory.DataSource = labDataTable;
-                    FormatDataGridView();
                 }
             }
-            catch (Exception ex)
-            {
-                LoadSampleData();
-            }
+            catch { LoadSampleData(); }
         }
 
         private void LoadSampleData()
         {
             labDataTable = new DataTable();
-            labDataTable.Columns.Add("Lab ID", typeof(string));
-            labDataTable.Columns.Add("Patient", typeof(string));
-            labDataTable.Columns.Add("Doctor", typeof(string));
-            labDataTable.Columns.Add("Test Name", typeof(string));
-            labDataTable.Columns.Add("Test Date", typeof(string));
-            labDataTable.Columns.Add("Status", typeof(string));
+            labDataTable.Columns.AddRange(new DataColumn[] {
+                new DataColumn("Lab ID"), new DataColumn("Test Name"), new DataColumn("Patient"),
+                new DataColumn("Date"), new DataColumn("Status")
+            });
 
-            labDataTable.Rows.Add("LAB-001", "Ahmad Yusuf", "Dr. John Smith", "Fasting Blood Sugar", "2026-01-10", "completed");
-            labDataTable.Rows.Add("LAB-002", "Ahmad Yusuf", "Dr. John Smith", "HbA1c Test", "2026-01-10", "completed");
-            labDataTable.Rows.Add("LAB-003", "Siti Rahayu", "Dr. Sarah Johnson", "MRI Brain", "2026-01-11", "pending");
-            labDataTable.Rows.Add("LAB-004", "Budi Santoso", "Dr. John Smith", "Lipid Profile", "2026-01-09", "completed");
-            labDataTable.Rows.Add("LAB-005", "Budi Santoso", "Dr. John Smith", "ECG", "2026-01-09", "in_progress");
-            labDataTable.Rows.Add("LAB-006", "Dewi Lestari", "Dr. Emily Davis", "Complete Blood Count", "2026-01-12", "pending");
-            labDataTable.Rows.Add("LAB-007", "Eko Prasetyo", "Dr. Michael Brown", "X-Ray Chest", "2026-01-08", "completed");
-            labDataTable.Rows.Add("LAB-008", "Fitria Wati", "Dr. Sarah Johnson", "Urine Analysis", "2026-01-13", "in_progress");
+            labDataTable.Rows.Add("LAB-001", "Blood Test", "Ahmad Malik", "2026-01-20", "Completed");
+            labDataTable.Rows.Add("LAB-002", "X-Ray", "Fatima Khan", "2026-01-19", "Pending");
+            labDataTable.Rows.Add("LAB-003", "CT Scan", "Ali Hassan", "2026-01-18", "In Progress");
+            labDataTable.Rows.Add("LAB-004", "MRI", "Sara Ahmed", "2026-01-17", "Completed");
+            labDataTable.Rows.Add("LAB-005", "Urine Test", "Usman Raza", "2026-01-16", "Pending");
 
             dgvLaboratory.DataSource = labDataTable;
-            FormatDataGridView();
         }
 
-        private void FormatDataGridView()
-        {
-            if (dgvLaboratory.Columns.Count > 0)
-            {
-                dgvLaboratory.Columns["Lab ID"].Width = 80;
-                dgvLaboratory.Columns["Patient"].Width = 130;
-                dgvLaboratory.Columns["Doctor"].Width = 130;
-                dgvLaboratory.Columns["Test Name"].Width = 150;
-                dgvLaboratory.Columns["Test Date"].Width = 100;
-                dgvLaboratory.Columns["Status"].Width = 90;
-            }
-
-            if (!dgvLaboratory.Columns.Contains("Edit"))
-            {
-                DataGridViewButtonColumn editBtn = new DataGridViewButtonColumn();
-                editBtn.Name = "Edit";
-                editBtn.HeaderText = "";
-                editBtn.Text = "✏️";
-                editBtn.UseColumnTextForButtonValue = true;
-                editBtn.Width = 45;
-                dgvLaboratory.Columns.Add(editBtn);
-            }
-
-            if (!dgvLaboratory.Columns.Contains("Delete"))
-            {
-                DataGridViewButtonColumn deleteBtn = new DataGridViewButtonColumn();
-                deleteBtn.Name = "Delete";
-                deleteBtn.HeaderText = "";
-                deleteBtn.Text = "🗑️";
-                deleteBtn.UseColumnTextForButtonValue = true;
-                deleteBtn.Width = 45;
-                dgvLaboratory.Columns.Add(deleteBtn);
-            }
-        }
-
-        private void txtSearch_TextChanged(object sender, EventArgs e)
+        private void TxtSearch_TextChanged(object sender, EventArgs e)
         {
             if (labDataTable != null)
             {
-                string searchText = txtSearch.Text.Trim();
-                if (string.IsNullOrEmpty(searchText))
-                {
-                    labDataTable.DefaultView.RowFilter = "";
-                }
-                else
-                {
-                    labDataTable.DefaultView.RowFilter = $"[Patient] LIKE '%{searchText}%' OR [Lab ID] LIKE '%{searchText}%' OR [Test Name] LIKE '%{searchText}%'";
-                }
+                string filter = txtSearch.Text.Replace("'", "''");
+                labDataTable.DefaultView.RowFilter = $"[Test Name] LIKE '%{filter}%' OR Patient LIKE '%{filter}%'";
             }
         }
 
-        private void cmbStatusFilter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (labDataTable != null)
-            {
-                string status = cmbStatusFilter.SelectedItem?.ToString();
-                if (string.IsNullOrEmpty(status) || status == "All Status")
-                {
-                    labDataTable.DefaultView.RowFilter = "";
-                }
-                else
-                {
-                    labDataTable.DefaultView.RowFilter = $"[Status] = '{status}'";
-                }
-            }
-        }
-
-        private void btnAddTest_Click(object sender, EventArgs e)
-        {
-            AddLaboratoryForm addForm = new AddLaboratoryForm();
-            addForm.ShowDialog();
-            LoadLabData();
-        }
-
-        private void dgvLaboratory_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                if (e.ColumnIndex == dgvLaboratory.Columns["Edit"].Index)
-                {
-                    string labId = dgvLaboratory.Rows[e.RowIndex].Cells["Lab ID"].Value.ToString();
-                    AddLaboratoryForm editForm = new AddLaboratoryForm(labId);
-                    editForm.ShowDialog();
-                    LoadLabData();
-                }
-                else if (e.ColumnIndex == dgvLaboratory.Columns["Delete"].Index)
-                {
-                    string labId = dgvLaboratory.Rows[e.RowIndex].Cells["Lab ID"].Value.ToString();
-                    string testName = dgvLaboratory.Rows[e.RowIndex].Cells["Test Name"].Value.ToString();
-
-                    DialogResult result = MessageBox.Show($"Are you sure you want to delete test '{testName}'?",
-                        "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                    if (result == DialogResult.Yes)
-                    {
-                        DeleteLabTest(labId);
-                    }
-                }
-            }
-        }
-
-        private void DeleteLabTest(string labId)
-        {
-            try
-            {
-                using (var connection = DatabaseHelper.Instance.GetConnection())
-                {
-                    connection.Open();
-                    string query = "DELETE FROM laboratory WHERE lab_id = @labId";
-                    MySqlCommand cmd = new MySqlCommand(query, connection);
-                    cmd.Parameters.AddWithValue("@labId", labId);
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("Lab test deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadLabData();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lab test deleted successfully! (Demo mode)", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadSampleData();
-            }
-        }
-
-        private Panel pnlHeader;
-        private Label lblTitle;
-        private Panel pnlSearch;
-        private Label lblSearch;
+        private Panel pnlHeader, pnlSearch, pnlFooter;
+        private Label lblTitle, lblIcon, lblSearchLabel, lblStatus;
         private TextBox txtSearch;
-        private ComboBox cmbStatusFilter;
         private DataGridView dgvLaboratory;
-        private Panel pnlFooter;
-        private Button btnAddTest;
+        private Button btnAdd, btnEdit, btnDelete, btnRefresh;
     }
 }

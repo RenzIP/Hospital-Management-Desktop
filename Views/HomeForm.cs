@@ -15,6 +15,12 @@ namespace Hospital_Management.Views
         private Panel pnlMainContent;
         private UserControl currentControl;
 
+        // Theme colors
+        private Color sidebarColor = Color.FromArgb(29, 53, 58);
+        private Color sidebarLightColor = Color.FromArgb(38, 70, 77);
+        private Color accentColor = Color.FromArgb(0, 173, 181);
+        private Color contentBgColor = Color.FromArgb(38, 70, 77);
+
         // Event for logout
         public event Action LogoutRequested;
 
@@ -26,57 +32,48 @@ namespace Hospital_Management.Views
             SetupTimer();
             HighlightSelectedMenu("Home");
             LoadHomeContent();
-            UpdateMenuLabels();
         }
 
         private void SetupFullScreenMode()
         {
-            // Enable resizing and maximize
             this.FormBorderStyle = FormBorderStyle.Sizable;
             this.MaximizeBox = true;
-            this.MinimumSize = new Size(1000, 650);
+            this.MinimumSize = new Size(1000, 700);
             this.WindowState = FormWindowState.Maximized;
-        }
-
-        private void UpdateMenuLabels()
-        {
-            // Update Exit to Logout
-            lblMenuExit.Text = "Logout";
-            lblIconExit.Text = "🚪";
         }
 
         private void SetupMainContentPanel()
         {
-            // Create main content panel that will host UserControls
             pnlMainContent = new Panel();
             pnlMainContent.Dock = DockStyle.Fill;
-            pnlMainContent.BackColor = Color.FromArgb(75, 145, 160);
+            pnlMainContent.BackColor = contentBgColor;
             pnlMainContent.Padding = new Padding(0);
             
-            // Add to content panel
             pnlContent.Controls.Add(pnlMainContent);
             pnlMainContent.BringToFront();
             
-            // Keep status bar and dark mode button on top
             pnlStatusBar.BringToFront();
             btnDarkMode.BringToFront();
         }
 
         private void LoadContent(UserControl control)
         {
-            // Dispose previous control
             if (currentControl != null)
             {
                 pnlMainContent.Controls.Remove(currentControl);
                 currentControl.Dispose();
             }
 
-            // Add new control
             currentControl = control;
             currentControl.Dock = DockStyle.Fill;
             pnlMainContent.Controls.Clear();
             pnlMainContent.Controls.Add(currentControl);
             currentControl.BringToFront();
+
+            // Hide status bar on non-Home views (UserControls have their own footer)
+            bool isHome = control is HomeControl;
+            pnlStatusBar.Visible = isHome;
+            btnDarkMode.Visible = isHome;
         }
 
         private void LoadHomeContent()
@@ -94,13 +91,11 @@ namespace Hospital_Management.Views
 
         private void ClockTimer_Tick(object sender, EventArgs e)
         {
-            // Update time display
-            lblCurrentShiftValue.Text = DateTime.Now.ToString("HH:mm:ss") + " - Dr. Sarah Jenkins";
+            lblCurrentShiftValue.Text = DateTime.Now.ToString("HH:mm") + " - Dr. Sarah";
         }
 
         private void HomeForm_Load(object sender, EventArgs e)
         {
-            // Center the form on screen if not maximized
             if (this.WindowState != FormWindowState.Maximized)
             {
                 this.CenterToScreen();
@@ -109,66 +104,45 @@ namespace Hospital_Management.Views
 
         private void HomeForm_Resize(object sender, EventArgs e)
         {
-            // Reposition status bar on resize
-            RepositionStatusBar();
-        }
-
-        private void RepositionStatusBar()
-        {
-            if (pnlStatusBar != null && pnlContent != null)
-            {
-                int x = (pnlContent.Width - pnlStatusBar.Width) / 2;
-                int y = pnlContent.Height - pnlStatusBar.Height - 20;
-                pnlStatusBar.Location = new Point(Math.Max(10, x), Math.Max(10, y));
-                
-                // Reposition dark mode button
-                if (btnDarkMode != null)
-                {
-                    btnDarkMode.Location = new Point(pnlContent.Width - btnDarkMode.Width - 20, y + 5);
-                }
-            }
+            // Status bar is anchored, will auto-reposition
         }
 
         private void HighlightSelectedMenu(string menuName)
         {
-            // Reset all menu items to default color
-            Color defaultColor = Color.FromArgb(26, 163, 168);
-            Color selectedColor = Color.FromArgb(0, 120, 130);
-            
-            pnlMenuHome.BackColor = defaultColor;
-            pnlMenuStaff.BackColor = defaultColor;
-            pnlMenuPatients.BackColor = defaultColor;
-            pnlMenuLaboratory.BackColor = defaultColor;
-            pnlMenuCapital.BackColor = defaultColor;
-            pnlMenuUnits.BackColor = defaultColor;
+            // Reset all to default
+            pnlMenuHome.BackColor = sidebarColor;
+            pnlMenuStaff.BackColor = sidebarColor;
+            pnlMenuPatients.BackColor = sidebarColor;
+            pnlMenuLaboratory.BackColor = sidebarColor;
+            pnlMenuCapital.BackColor = sidebarColor;
+            pnlMenuUnits.BackColor = sidebarColor;
 
             // Highlight selected
             switch (menuName)
             {
                 case "Home":
-                    pnlMenuHome.BackColor = selectedColor;
+                    pnlMenuHome.BackColor = sidebarLightColor;
                     break;
                 case "Staff":
-                    pnlMenuStaff.BackColor = selectedColor;
+                    pnlMenuStaff.BackColor = sidebarLightColor;
                     break;
                 case "Patients":
-                    pnlMenuPatients.BackColor = selectedColor;
+                    pnlMenuPatients.BackColor = sidebarLightColor;
                     break;
                 case "Laboratory":
-                    pnlMenuLaboratory.BackColor = selectedColor;
+                    pnlMenuLaboratory.BackColor = sidebarLightColor;
                     break;
                 case "Capital":
-                    pnlMenuCapital.BackColor = selectedColor;
+                    pnlMenuCapital.BackColor = sidebarLightColor;
                     break;
                 case "Units":
-                    pnlMenuUnits.BackColor = selectedColor;
+                    pnlMenuUnits.BackColor = sidebarLightColor;
                     break;
             }
 
             currentMenuSelected = menuName;
         }
 
-        // Menu click handlers - load UserControls into embedded panel
         private void pnlMenuHome_Click(object sender, EventArgs e)
         {
             HighlightSelectedMenu("Home");
@@ -207,12 +181,10 @@ namespace Hospital_Management.Views
 
         private void pnlMenuExit_Click(object sender, EventArgs e)
         {
-            // Now acts as Logout
             DialogResult result = MessageBox.Show("Are you sure you want to logout?", "Confirm Logout", 
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                // Raise logout event
                 LogoutRequested?.Invoke();
                 this.Close();
             }
@@ -229,32 +201,24 @@ namespace Hospital_Management.Views
             if (isDarkMode)
             {
                 btnDarkMode.Text = "☀";
-                btnDarkMode.BackColor = Color.FromArgb(60, 60, 60);
-                btnDarkMode.ForeColor = Color.White;
+                btnDarkMode.BackColor = Color.FromArgb(30, 55, 60);
             }
             else
             {
                 btnDarkMode.Text = "🌙";
-                btnDarkMode.BackColor = Color.White;
-                btnDarkMode.ForeColor = Color.Black;
+                btnDarkMode.BackColor = Color.FromArgb(50, 90, 100);
             }
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
-            if (clockTimer != null)
-            {
-                clockTimer.Stop();
-                clockTimer.Dispose();
-            }
-            if (currentControl != null)
-            {
-                currentControl.Dispose();
-            }
+            clockTimer?.Stop();
+            clockTimer?.Dispose();
+            currentControl?.Dispose();
         }
 
-        // Make menu items clickable through their child labels
+        // Label click handlers
         private void lblMenuHome_Click(object sender, EventArgs e) => pnlMenuHome_Click(sender, e);
         private void lblMenuStaff_Click(object sender, EventArgs e) => pnlMenuStaff_Click(sender, e);
         private void lblMenuPatients_Click(object sender, EventArgs e) => pnlMenuPatients_Click(sender, e);
@@ -263,7 +227,7 @@ namespace Hospital_Management.Views
         private void lblMenuUnits_Click(object sender, EventArgs e) => pnlMenuUnits_Click(sender, e);
         private void lblMenuExit_Click(object sender, EventArgs e) => pnlMenuExit_Click(sender, e);
 
-        // Keep these for backwards compatibility
+        // Stubs for designer compatibility
         private void pnlWelcome_Paint(object sender, PaintEventArgs e) { }
         private void pnlStatusBar_Paint(object sender, PaintEventArgs e) { }
         private void CenterStatusBar() { }

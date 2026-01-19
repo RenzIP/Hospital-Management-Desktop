@@ -113,11 +113,21 @@ namespace Hospital_Management.Views
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
                 HomeForm mainForm = new HomeForm();
-                mainForm.FormClosed += (s, args) => this.Close(); // Close LoginForm when HomeForm closes
+                bool isLoggingOut = false;
+                
                 mainForm.LogoutRequested += () => {
+                    isLoggingOut = true;
                     this.Show();
                     txtPassword.Clear();
                 };
+                
+                mainForm.FormClosed += (s, args) => {
+                    if (!isLoggingOut)
+                    {
+                        this.Close(); // Only close app if user clicked X, not logout
+                    }
+                };
+                
                 this.Hide();
                 mainForm.Show();
             }
