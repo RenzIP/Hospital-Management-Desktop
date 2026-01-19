@@ -182,12 +182,13 @@ namespace Hospital_Management.Views
             // btnTogglePassword
             // 
             this.btnTogglePassword = new System.Windows.Forms.Button();
-            this.btnTogglePassword.BackColor = System.Drawing.Color.White;
+            this.btnTogglePassword.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
             this.btnTogglePassword.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnTogglePassword.FlatAppearance.BorderSize = 0;
+            this.btnTogglePassword.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.btnTogglePassword.FlatAppearance.BorderSize = 1;
             this.btnTogglePassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTogglePassword.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnTogglePassword.ForeColor = System.Drawing.Color.Gray;
+            this.btnTogglePassword.Font = new System.Drawing.Font("Segoe UI Symbol", 12F);
+            this.btnTogglePassword.ForeColor = System.Drawing.Color.FromArgb(100, 100, 100);
             this.btnTogglePassword.Location = new System.Drawing.Point(330, 275);
             this.btnTogglePassword.Name = "btnTogglePassword";
             this.btnTogglePassword.Size = new System.Drawing.Size(30, 25);
