@@ -4,6 +4,8 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.IO;
 using Hospital_Management.Views.Controls;
+using Hospital_Management.Helpers;
+using Hospital_Management.Controllers;
 
 namespace Hospital_Management.Views
 {
@@ -30,8 +32,64 @@ namespace Hospital_Management.Views
             SetupFullScreenMode();
             SetupMainContentPanel();
             SetupTimer();
+            ApplyRoleBasedMenuVisibility();
+            UpdateUserDisplay();
             HighlightSelectedMenu("Home");
             LoadHomeContent();
+        }
+
+        /// <summary>
+        /// Show/hide menu items based on current user's role
+        /// </summary>
+        private void ApplyRoleBasedMenuVisibility()
+        {
+            // Apply visibility based on role permissions
+            pnlMenuHome.Visible = RoleHelper.CanAccessMenu("Home");
+            pnlMenuStaff.Visible = RoleHelper.CanAccessMenu("Staff");
+            pnlMenuPatients.Visible = RoleHelper.CanAccessMenu("Patients");
+            pnlMenuLaboratory.Visible = RoleHelper.CanAccessMenu("Laboratory");
+            pnlMenuCapital.Visible = RoleHelper.CanAccessMenu("Capital");
+            pnlMenuUnits.Visible = RoleHelper.CanAccessMenu("Units");
+
+            // Reorganize visible menu positions
+            RepositionMenuItems();
+        }
+
+        /// <summary>
+        /// Reposition menu items after hiding some based on role
+        /// </summary>
+        private void RepositionMenuItems()
+        {
+            int yPosition = 130; // Starting position after logo
+            int menuHeight = 50;
+
+            Panel[] menuItems = { pnlMenuHome, pnlMenuStaff, pnlMenuPatients, 
+                                  pnlMenuLaboratory, pnlMenuCapital, pnlMenuUnits };
+
+            foreach (var menu in menuItems)
+            {
+                if (menu.Visible)
+                {
+                    menu.Location = new Point(0, yPosition);
+                    yPosition += menuHeight;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Update display with current user info
+        /// </summary>
+        private void UpdateUserDisplay()
+        {
+            string username = CurrentUser.Username ?? "User";
+            string role = RoleHelper.GetRoleDisplayName();
+            
+            // Update welcome title
+            lblWelcomeTitle.Text = $"Welcome, {username}!";
+            lblWelcomeSubtitle.Text = $"Role: {role}";
+
+            // Update shift display with current user
+            lblCurrentShiftValue.Text = $"{DateTime.Now:HH:mm} - {username}";
         }
 
         private void SetupFullScreenMode()

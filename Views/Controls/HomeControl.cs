@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using Hospital_Management.Controllers;
+using Hospital_Management.Helpers;
 
 namespace Hospital_Management.Views.Controls
 {
@@ -16,6 +18,7 @@ namespace Hospital_Management.Views.Controls
         {
             InitializeComponent();
             this.Resize += HomeControl_Resize;
+            LoadStatistics();
         }
 
         private void HomeControl_Resize(object sender, EventArgs e)
@@ -30,6 +33,65 @@ namespace Hospital_Management.Views.Controls
                 int x = (this.Width - pnlCenterContainer.Width) / 2;
                 int y = (this.Height - pnlCenterContainer.Height) / 2 - 50;
                 pnlCenterContainer.Location = new Point(Math.Max(20, x), Math.Max(20, y));
+            }
+        }
+
+        /// <summary>
+        /// Load statistics from database
+        /// </summary>
+        private void LoadStatistics()
+        {
+            try
+            {
+                // Update welcome message with current user
+                string username = CurrentUser.Username ?? "User";
+                string role = RoleHelper.GetRoleDisplayName();
+                
+                lblWelcomeTitle.Text = $"Welcome, {username}!";
+                lblWelcomeSubtitle.Text = $"Role: {role} | Department: {CurrentUser.Department ?? "General"}";
+
+                // Load real statistics from database
+                var dbHelper = DatabaseHelper.Instance;
+                
+                int staffCount = GetTableCount("staff");
+                int patientCount = GetTableCount("patients");
+                int labCount = GetTableCount("laboratory");
+                int unitCount = GetTableCount("units");
+
+                // Update stat cards
+                lblStaffCount.Text = staffCount.ToString("N0");
+                lblPatientsCount.Text = patientCount.ToString("N0");
+                lblLabsCount.Text = labCount.ToString("N0");
+                lblUnitsCount.Text = unitCount.ToString("N0");
+            }
+            catch (Exception ex)
+            {
+                // If database error, keep default values
+                System.Diagnostics.Debug.WriteLine($"Error loading statistics: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Get count from a database table
+        /// </summary>
+        private int GetTableCount(string tableName)
+        {
+            try
+            {
+                var dbHelper = DatabaseHelper.Instance;
+                using (var conn = dbHelper.GetConnection())
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $"SELECT COUNT(*) FROM {tableName}";
+                        return Convert.ToInt32(cmd.ExecuteScalar());
+                    }
+                }
+            }
+            catch
+            {
+                return 0;
             }
         }
 
@@ -92,13 +154,13 @@ namespace Hospital_Management.Views.Controls
             int totalWidth = (cardWidth * 4) + (spacing * 3);
             int startX = (800 - totalWidth) / 2;
 
-            CreateStatCard(pnlStaff, lblStaffCount, lblStaffLabel, "125", "Staff Members", startX, 
+            CreateStatCard(pnlStaff, lblStaffCount, lblStaffLabel, "0", "Staff Members", startX, 
                 Color.FromArgb(0, 122, 204), "👥", cardWidth, cardHeight);
-            CreateStatCard(pnlPatients, lblPatientsCount, lblPatientsLabel, "1,458", "Patients", 
+            CreateStatCard(pnlPatients, lblPatientsCount, lblPatientsLabel, "0", "Patients", 
                 startX + cardWidth + spacing, Color.FromArgb(40, 167, 69), "❤", cardWidth, cardHeight);
-            CreateStatCard(pnlLabs, lblLabsCount, lblLabsLabel, "89", "Lab Tests", 
+            CreateStatCard(pnlLabs, lblLabsCount, lblLabsLabel, "0", "Lab Tests", 
                 startX + (cardWidth + spacing) * 2, Color.FromArgb(255, 193, 7), "🔬", cardWidth, cardHeight);
-            CreateStatCard(pnlUnits, lblUnitsCount, lblUnitsLabel, "24", "Units", 
+            CreateStatCard(pnlUnits, lblUnitsCount, lblUnitsLabel, "0", "Units", 
                 startX + (cardWidth + spacing) * 3, Color.FromArgb(220, 53, 69), "🏥", cardWidth, cardHeight);
 
             this.pnlStats.Controls.AddRange(new Control[] { pnlStaff, pnlPatients, pnlLabs, pnlUnits });
