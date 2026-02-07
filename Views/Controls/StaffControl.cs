@@ -40,6 +40,7 @@ namespace Hospital_Management.Views.Controls
             this.btnAdd = new Button();
             this.btnEdit = new Button();
             this.btnDelete = new Button();
+            this.btnExport = new Button();
             this.btnRefresh = new Button();
             this.lblStatus = new Label();
             
@@ -203,7 +204,8 @@ namespace Hospital_Management.Views.Controls
             CreateButton(btnAdd, "➕ Add", Color.FromArgb(0, 150, 136), 20);
             CreateButton(btnEdit, "✏️ Edit", Color.FromArgb(33, 150, 243), 120);
             CreateButton(btnDelete, "🗑️ Delete", Color.FromArgb(211, 47, 47), 220);
-            CreateButton(btnRefresh, "🔄", Color.FromArgb(100, 130, 140), 330);
+            CreateButton(btnExport, "📊 Export", Color.FromArgb(40, 167, 69), 330);
+            CreateButton(btnRefresh, "🔄", Color.FromArgb(100, 130, 140), 440);
             btnRefresh.Size = new Size(45, 36);
 
             this.lblStatus.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -217,9 +219,10 @@ namespace Hospital_Management.Views.Controls
             btnAdd.Click += BtnAdd_Click;
             btnEdit.Click += BtnEdit_Click;
             btnDelete.Click += BtnDelete_Click;
+            btnExport.Click += BtnExport_Click;
             btnRefresh.Click += (s, e) => LoadStaffData();
 
-            this.pnlFooter.Controls.AddRange(new Control[] { btnAdd, btnEdit, btnDelete, btnRefresh, lblStatus });
+            this.pnlFooter.Controls.AddRange(new Control[] { btnAdd, btnEdit, btnDelete, btnExport, btnRefresh, lblStatus });
 
             this.Controls.Add(dgvStaff);
             this.Controls.Add(pnlForm);
@@ -442,6 +445,11 @@ namespace Hospital_Management.Views.Controls
         private TextBox txtSearch, txtName, txtCNIC, txtPhone, txtEmail;
         private ComboBox cmbDepartment;
         private DataGridView dgvStaff;
-        private Button btnAdd, btnEdit, btnDelete, btnRefresh, btnSave, btnCancel, btnClear;
+        private Button btnAdd, btnEdit, btnDelete, btnExport, btnRefresh, btnSave, btnCancel, btnClear;
+
+        private void BtnExport_Click(object sender, EventArgs e)
+        {
+            ExcelHelper.ExportToExcel(dgvStaff, "Staff_Data");
+        }
     }
 }

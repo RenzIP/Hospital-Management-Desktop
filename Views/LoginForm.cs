@@ -17,8 +17,10 @@ namespace Hospital_Management.Views
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
-            // Center the card
+            // Center the card on load
             CenterCard();
+            // Subscribe to resize event for responsiveness
+            this.Resize += (s, args) => CenterCard();
         }
 
         private void CenterCard()
@@ -142,8 +144,8 @@ namespace Hospital_Management.Views
 
         private void lblForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MessageBox.Show("Please contact your system administrator to reset your password.", 
-                "Password Recovery", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ForgotPasswordForm forgotForm = new ForgotPasswordForm();
+            forgotForm.ShowDialog();
         }
 
         private void btnTogglePassword_Click(object sender, EventArgs e)
@@ -158,6 +160,12 @@ namespace Hospital_Management.Views
                 txtPassword.PasswordChar = '*'; // Hide password
                 btnTogglePassword.Text = "Show";
             }
+        }
+
+        private void lnkRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            RegisterUserForm registerForm = new RegisterUserForm();
+            registerForm.ShowDialog();
         }
     }
 }

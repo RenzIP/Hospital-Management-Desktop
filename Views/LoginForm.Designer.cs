@@ -29,6 +29,7 @@ namespace Hospital_Management.Views
             this.chkTrustedDevice = new System.Windows.Forms.CheckBox();
             this.lblForgotPassword = new System.Windows.Forms.LinkLabel();
             this.btnLogin = new System.Windows.Forms.Button();
+            this.lnkRegister = new System.Windows.Forms.LinkLabel();
             this.lblAuthorized = new System.Windows.Forms.Label();
             this.lblCopyright = new System.Windows.Forms.Label();
             this.pnlCard.SuspendLayout();
@@ -48,6 +49,7 @@ namespace Hospital_Management.Views
             this.pnlCard.Controls.Add(this.chkTrustedDevice);
             this.pnlCard.Controls.Add(this.lblForgotPassword);
             this.pnlCard.Controls.Add(this.btnLogin);
+            this.pnlCard.Controls.Add(this.lnkRegister);
             this.pnlCard.Controls.Add(this.lblAuthorized);
             this.pnlCard.Location = new System.Drawing.Point(200, 80);
             this.pnlCard.Name = "pnlCard";
@@ -191,11 +193,24 @@ namespace Hospital_Management.Views
             this.btnLogin.UseVisualStyleBackColor = false;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
             // 
+            // lnkRegister
+            // 
+            this.lnkRegister.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lnkRegister.LinkColor = System.Drawing.Color.FromArgb(33, 150, 243);
+            this.lnkRegister.Location = new System.Drawing.Point(0, 335);
+            this.lnkRegister.Name = "lnkRegister";
+            this.lnkRegister.Size = new System.Drawing.Size(400, 20);
+            this.lnkRegister.TabIndex = 12;
+            this.lnkRegister.TabStop = true;
+            this.lnkRegister.Text = "Don't have an account? Register here";
+            this.lnkRegister.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lnkRegister.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkRegister_LinkClicked);
+            // 
             // lblAuthorized
             // 
             this.lblAuthorized.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.lblAuthorized.ForeColor = System.Drawing.Color.FromArgb(150, 150, 150);
-            this.lblAuthorized.Location = new System.Drawing.Point(0, 340);
+            this.lblAuthorized.Location = new System.Drawing.Point(0, 355);
             this.lblAuthorized.Name = "lblAuthorized";
             this.lblAuthorized.Size = new System.Drawing.Size(400, 20);
             this.lblAuthorized.TabIndex = 11;
@@ -222,8 +237,9 @@ namespace Hospital_Management.Views
             this.ClientSize = new System.Drawing.Size(800, 600);
             this.Controls.Add(this.pnlCard);
             this.Controls.Add(this.lblCopyright);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.MinimumSize = new System.Drawing.Size(600, 500);
+            this.MaximizeBox = true;
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hospital Management - Login";
@@ -247,6 +263,7 @@ namespace Hospital_Management.Views
         private System.Windows.Forms.CheckBox chkTrustedDevice;
         private System.Windows.Forms.LinkLabel lblForgotPassword;
         private System.Windows.Forms.Button btnLogin;
+        private System.Windows.Forms.LinkLabel lnkRegister;
         private System.Windows.Forms.Label lblAuthorized;
         private System.Windows.Forms.Label lblCopyright;
     }

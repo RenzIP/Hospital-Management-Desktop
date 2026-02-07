@@ -204,6 +204,11 @@ namespace Hospital_Management.Views
             }
         }
 
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            ExcelHelper.ExportToExcel(dgvStaff, "Staff_Data");
+        }
+
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();

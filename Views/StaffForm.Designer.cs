@@ -36,6 +36,7 @@ namespace Hospital_Management.Views
             this.dgvStaff = new System.Windows.Forms.DataGridView();
             this.pnlFooter = new System.Windows.Forms.Panel();
             this.btnRegisterDoctor = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
 
             this.pnlHeader.SuspendLayout();
@@ -138,6 +139,7 @@ namespace Hospital_Management.Views
             // 
             this.pnlFooter.BackColor = System.Drawing.Color.FromArgb(45, 45, 48);
             this.pnlFooter.Controls.Add(this.btnRegisterDoctor);
+            this.pnlFooter.Controls.Add(this.btnExport);
             this.pnlFooter.Controls.Add(this.btnClose);
             this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlFooter.Location = new System.Drawing.Point(0, 450);
@@ -161,6 +163,23 @@ namespace Hospital_Management.Views
             this.btnRegisterDoctor.Text = "Register Doctor";
             this.btnRegisterDoctor.UseVisualStyleBackColor = false;
             this.btnRegisterDoctor.Click += new System.EventHandler(this.btnRegisterDoctor_Click);
+
+            // 
+            // btnExport
+            // 
+            this.btnExport.BackColor = System.Drawing.Color.FromArgb(40, 167, 69);
+            this.btnExport.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnExport.FlatAppearance.BorderSize = 0;
+            this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExport.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnExport.ForeColor = System.Drawing.Color.White;
+            this.btnExport.Location = new System.Drawing.Point(420, 10);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(125, 32);
+            this.btnExport.TabIndex = 2;
+            this.btnExport.Text = "Export Excel";
+            this.btnExport.UseVisualStyleBackColor = false;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
 
             // 
             // btnClose
@@ -242,6 +261,7 @@ namespace Hospital_Management.Views
         private System.Windows.Forms.DataGridView dgvStaff;
         private System.Windows.Forms.Panel pnlFooter;
         private System.Windows.Forms.Button btnRegisterDoctor;
+        private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Button btnClose;
     }
 }
