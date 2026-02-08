@@ -51,7 +51,15 @@ namespace Hospital_Management.Views.Controls
             this.txtCNIC = new TextBox();
             this.txtPhone = new TextBox();
             this.txtEmail = new TextBox();
+            this.txtPassword = new TextBox();
+            this.txtAddress = new TextBox();
             this.cmbDepartment = new ComboBox();
+            this.cmbQualification = new ComboBox();
+            this.cmbGender = new ComboBox();
+            this.cmbFromTime = new ComboBox();
+            this.cmbToTime = new ComboBox();
+            this.dtpDateOfBirth = new DateTimePicker();
+            this.numSalary = new NumericUpDown();
             this.btnSave = new Button();
             this.btnCancel = new Button();
             this.btnClear = new Button();
@@ -103,9 +111,10 @@ namespace Hospital_Management.Views.Controls
             // Form Panel (initially hidden)
             this.pnlForm.BackColor = formBg;
             this.pnlForm.Dock = DockStyle.Top;
-            this.pnlForm.Size = new Size(800, 180);
+            this.pnlForm.Size = new Size(800, 280);
             this.pnlForm.Visible = false;
             this.pnlForm.Padding = new Padding(20, 10, 20, 10);
+            this.pnlForm.AutoScroll = true;
 
             // Form Title
             this.lblFormTitle.Font = new Font("Segoe UI Semibold", 14F);
@@ -114,60 +123,149 @@ namespace Hospital_Management.Views.Controls
             this.lblFormTitle.Size = new Size(300, 25);
             this.lblFormTitle.Text = "Add New Staff";
 
-            // Form fields - Row 1
-            CreateFormLabel("Name:", 20, 45, 60);
+            // Row 1: Name, CNIC, Phone, Email
+            CreateFormLabel("Name:", 20, 45, 50);
             this.txtName.BackColor = cardBg;
             this.txtName.BorderStyle = BorderStyle.FixedSingle;
-            this.txtName.Font = new Font("Segoe UI", 10F);
+            this.txtName.Font = new Font("Segoe UI", 9F);
             this.txtName.ForeColor = textColor;
-            this.txtName.Location = new Point(80, 42);
-            this.txtName.Size = new Size(180, 25);
+            this.txtName.Location = new Point(70, 42);
+            this.txtName.Size = new Size(140, 22);
 
-            CreateFormLabel("CNIC:", 280, 45, 50);
+            CreateFormLabel("CNIC:", 220, 45, 40);
             this.txtCNIC.BackColor = cardBg;
             this.txtCNIC.BorderStyle = BorderStyle.FixedSingle;
-            this.txtCNIC.Font = new Font("Segoe UI", 10F);
+            this.txtCNIC.Font = new Font("Segoe UI", 9F);
             this.txtCNIC.ForeColor = textColor;
-            this.txtCNIC.Location = new Point(330, 42);
-            this.txtCNIC.Size = new Size(150, 25);
+            this.txtCNIC.Location = new Point(260, 42);
+            this.txtCNIC.Size = new Size(130, 22);
 
-            CreateFormLabel("Phone:", 500, 45, 50);
+            CreateFormLabel("Phone:", 400, 45, 45);
             this.txtPhone.BackColor = cardBg;
             this.txtPhone.BorderStyle = BorderStyle.FixedSingle;
-            this.txtPhone.Font = new Font("Segoe UI", 10F);
+            this.txtPhone.Font = new Font("Segoe UI", 9F);
             this.txtPhone.ForeColor = textColor;
-            this.txtPhone.Location = new Point(555, 42);
-            this.txtPhone.Size = new Size(150, 25);
+            this.txtPhone.Location = new Point(450, 42);
+            this.txtPhone.Size = new Size(120, 22);
 
-            // Form fields - Row 2
-            CreateFormLabel("Email:", 20, 80, 60);
+            CreateFormLabel("Email:", 580, 45, 40);
             this.txtEmail.BackColor = cardBg;
             this.txtEmail.BorderStyle = BorderStyle.FixedSingle;
-            this.txtEmail.Font = new Font("Segoe UI", 10F);
+            this.txtEmail.Font = new Font("Segoe UI", 9F);
             this.txtEmail.ForeColor = textColor;
-            this.txtEmail.Location = new Point(80, 77);
-            this.txtEmail.Size = new Size(200, 25);
+            this.txtEmail.Location = new Point(625, 42);
+            this.txtEmail.Size = new Size(160, 22);
 
-            CreateFormLabel("Dept:", 300, 80, 45);
+            // Row 2: DOB, Gender, Password, Qualification
+            CreateFormLabel("DOB:", 20, 75, 40);
+            this.dtpDateOfBirth.Format = DateTimePickerFormat.Short;
+            this.dtpDateOfBirth.Font = new Font("Segoe UI", 9F);
+            this.dtpDateOfBirth.Location = new Point(70, 72);
+            this.dtpDateOfBirth.Size = new Size(100, 22);
+
+            CreateFormLabel("Gender:", 180, 75, 50);
+            this.cmbGender.BackColor = cardBg;
+            this.cmbGender.FlatStyle = FlatStyle.Flat;
+            this.cmbGender.Font = new Font("Segoe UI", 9F);
+            this.cmbGender.ForeColor = textColor;
+            this.cmbGender.Location = new Point(235, 72);
+            this.cmbGender.Size = new Size(80, 22);
+            this.cmbGender.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.cmbGender.Items.AddRange(new object[] { "Male", "Female" });
+            this.cmbGender.SelectedIndex = 0;
+
+            CreateFormLabel("Password:", 325, 75, 60);
+            this.txtPassword.BackColor = cardBg;
+            this.txtPassword.BorderStyle = BorderStyle.FixedSingle;
+            this.txtPassword.Font = new Font("Segoe UI", 9F);
+            this.txtPassword.ForeColor = textColor;
+            this.txtPassword.Location = new Point(390, 72);
+            this.txtPassword.Size = new Size(120, 22);
+            this.txtPassword.UseSystemPasswordChar = true;
+
+            CreateFormLabel("Qualification:", 520, 75, 75);
+            this.cmbQualification.BackColor = cardBg;
+            this.cmbQualification.FlatStyle = FlatStyle.Flat;
+            this.cmbQualification.Font = new Font("Segoe UI", 9F);
+            this.cmbQualification.ForeColor = textColor;
+            this.cmbQualification.Location = new Point(600, 72);
+            this.cmbQualification.Size = new Size(80, 22);
+            this.cmbQualification.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.cmbQualification.Items.AddRange(new object[] { "MBBS", "MD", "MS", "DM", "MCh", "DNB", "PhD" });
+            this.cmbQualification.SelectedIndex = 0;
+
+            // Row 3: Department, From Time, To Time, Salary
+            CreateFormLabel("Dept:", 20, 105, 40);
             this.cmbDepartment.BackColor = cardBg;
             this.cmbDepartment.FlatStyle = FlatStyle.Flat;
-            this.cmbDepartment.Font = new Font("Segoe UI", 10F);
+            this.cmbDepartment.Font = new Font("Segoe UI", 9F);
             this.cmbDepartment.ForeColor = textColor;
-            this.cmbDepartment.Location = new Point(350, 77);
-            this.cmbDepartment.Size = new Size(150, 25);
+            this.cmbDepartment.Location = new Point(70, 102);
+            this.cmbDepartment.Size = new Size(120, 22);
             this.cmbDepartment.DropDownStyle = ComboBoxStyle.DropDownList;
             this.cmbDepartment.Items.AddRange(new object[] { "Cardiology", "Neurology", "Orthopedics", "Pediatrics", "ICU", "Dermatology", "Surgery", "Radiology", "Emergency", "General" });
 
+            CreateFormLabel("From:", 200, 105, 40);
+            this.cmbFromTime.BackColor = cardBg;
+            this.cmbFromTime.FlatStyle = FlatStyle.Flat;
+            this.cmbFromTime.Font = new Font("Segoe UI", 9F);
+            this.cmbFromTime.ForeColor = textColor;
+            this.cmbFromTime.Location = new Point(245, 102);
+            this.cmbFromTime.Size = new Size(100, 22);
+            this.cmbFromTime.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            CreateFormLabel("To:", 355, 105, 25);
+            this.cmbToTime.BackColor = cardBg;
+            this.cmbToTime.FlatStyle = FlatStyle.Flat;
+            this.cmbToTime.Font = new Font("Segoe UI", 9F);
+            this.cmbToTime.ForeColor = textColor;
+            this.cmbToTime.Location = new Point(385, 102);
+            this.cmbToTime.Size = new Size(100, 22);
+            this.cmbToTime.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            // Populate time dropdowns
+            for (int hour = 0; hour < 24; hour++)
+            {
+                string time = DateTime.Today.AddHours(hour).ToString("h:00 tt");
+                cmbFromTime.Items.Add(time);
+                cmbToTime.Items.Add(time);
+            }
+            cmbFromTime.SelectedIndex = 8;
+            cmbToTime.SelectedIndex = 16;
+
+            CreateFormLabel("Salary:", 495, 105, 45);
+            this.numSalary.BackColor = cardBg;
+            this.numSalary.Font = new Font("Segoe UI", 9F);
+            this.numSalary.ForeColor = textColor;
+            this.numSalary.Location = new Point(545, 102);
+            this.numSalary.Size = new Size(120, 22);
+            this.numSalary.Maximum = 999999999;
+            this.numSalary.ThousandsSeparator = true;
+
+            // Row 4: Address
+            CreateFormLabel("Address:", 20, 135, 55);
+            this.txtAddress.BackColor = cardBg;
+            this.txtAddress.BorderStyle = BorderStyle.FixedSingle;
+            this.txtAddress.Font = new Font("Segoe UI", 9F);
+            this.txtAddress.ForeColor = textColor;
+            this.txtAddress.Location = new Point(80, 132);
+            this.txtAddress.Size = new Size(400, 22);
+
             // Form Buttons
-            CreateFormButton(btnCancel, "Cancel", Color.FromArgb(100, 100, 110), 450, 130);
-            CreateFormButton(btnClear, "Clear", Color.FromArgb(80, 130, 140), 560, 130);
-            CreateFormButton(btnSave, "Save", Color.FromArgb(0, 150, 136), 670, 130);
+            CreateFormButton(btnCancel, "Cancel", Color.FromArgb(100, 100, 110), 500, 180);
+            CreateFormButton(btnClear, "Clear", Color.FromArgb(80, 130, 140), 610, 180);
+            CreateFormButton(btnSave, "Save", Color.FromArgb(0, 150, 136), 720, 180);
 
             btnSave.Click += BtnSave_Click;
             btnCancel.Click += BtnCancel_Click;
             btnClear.Click += BtnClear_Click;
 
-            this.pnlForm.Controls.AddRange(new Control[] { lblFormTitle, txtName, txtCNIC, txtPhone, txtEmail, cmbDepartment, btnSave, btnCancel, btnClear });
+            this.pnlForm.Controls.AddRange(new Control[] { 
+                lblFormTitle, txtName, txtCNIC, txtPhone, txtEmail, txtPassword, txtAddress,
+                dtpDateOfBirth, cmbGender, cmbQualification, cmbDepartment, 
+                cmbFromTime, cmbToTime, numSalary,
+                btnSave, btnCancel, btnClear 
+            });
 
             // DataGridView
             this.dgvStaff.AllowUserToAddRows = false;
@@ -195,6 +293,8 @@ namespace Hospital_Management.Views.Controls
             this.dgvStaff.RowTemplate.Height = 40;
             this.dgvStaff.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.dgvStaff.AlternatingRowsDefaultCellStyle.BackColor = rowAlt;
+            this.dgvStaff.SelectionChanged += DgvStaff_SelectionChanged;
+            this.dgvStaff.CellDoubleClick += DgvStaff_CellDoubleClick;
 
             // Footer
             this.pnlFooter.BackColor = headerBg;
@@ -277,14 +377,7 @@ namespace Hospital_Management.Views.Controls
             
             if (editMode && row != null)
             {
-                lblFormTitle.Text = "Edit Staff Information";
-                editingStaffId = row.Cells["Staff ID"].Value?.ToString() ?? "";
-                txtName.Text = row.Cells["Name"].Value?.ToString() ?? "";
-                txtCNIC.Text = row.Cells["CNIC"].Value?.ToString() ?? "";
-                txtPhone.Text = row.Cells["Phone Number"].Value?.ToString() ?? "";
-                txtEmail.Text = row.Cells["Email"].Value?.ToString() ?? "";
-                string dept = row.Cells["Department"].Value?.ToString() ?? "";
-                cmbDepartment.SelectedItem = dept;
+                PopulateFormFromRow(row);
             }
             else
             {
@@ -307,7 +400,130 @@ namespace Hospital_Management.Views.Controls
             txtCNIC.Clear();
             txtPhone.Clear();
             txtEmail.Clear();
+            txtPassword.Clear();
+            txtAddress.Clear();
             cmbDepartment.SelectedIndex = -1;
+            cmbQualification.SelectedIndex = 0;
+            cmbGender.SelectedIndex = 0;
+            cmbFromTime.SelectedIndex = 8;
+            cmbToTime.SelectedIndex = 16;
+            dtpDateOfBirth.Value = DateTime.Today;
+            numSalary.Value = 0;
+        }
+
+        private void DgvStaff_SelectionChanged(object sender, EventArgs e)
+        {
+            // Jika form sedang terbuka dalam mode edit, auto-populate dengan baris yang dipilih
+            if (pnlForm.Visible && isEditMode && dgvStaff.SelectedRows.Count > 0)
+            {
+                PopulateFormFromRow(dgvStaff.SelectedRows[0]);
+            }
+        }
+
+        private void DgvStaff_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Double-click untuk langsung masuk mode edit
+            if (e.RowIndex >= 0 && dgvStaff.SelectedRows.Count > 0)
+            {
+                ShowForm(true, dgvStaff.SelectedRows[0]);
+            }
+        }
+
+        private void PopulateFormFromRow(DataGridViewRow row)
+        {
+            if (row == null) return;
+            
+            string staffId = row.Cells["Staff ID"].Value?.ToString() ?? "";
+            if (string.IsNullOrEmpty(staffId)) return;
+
+            lblFormTitle.Text = "Edit Staff Information";
+            editingStaffId = staffId;
+
+            // Load full data from database
+            try
+            {
+                using (var connection = DatabaseHelper.Instance.GetConnection())
+                {
+                    connection.Open();
+                    string query = "SELECT * FROM staff WHERE staff_id = @staffId";
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("@staffId", staffId);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            txtName.Text = reader["name"]?.ToString() ?? "";
+                            txtCNIC.Text = reader["cnic"]?.ToString() ?? "";
+                            txtPhone.Text = reader["phone_no"]?.ToString() ?? "";
+                            txtEmail.Text = reader["email"]?.ToString() ?? "";
+                            txtPassword.Text = reader["password"]?.ToString() ?? "";
+                            txtAddress.Text = reader["address"]?.ToString() ?? "";
+
+                            // Department
+                            string dept = reader["department"]?.ToString() ?? "";
+                            int deptIndex = cmbDepartment.Items.IndexOf(dept);
+                            cmbDepartment.SelectedIndex = deptIndex >= 0 ? deptIndex : -1;
+
+                            // Qualification
+                            string qual = reader["qualification"]?.ToString() ?? "";
+                            int qualIndex = cmbQualification.Items.IndexOf(qual);
+                            cmbQualification.SelectedIndex = qualIndex >= 0 ? qualIndex : 0;
+
+                            // Gender
+                            string gender = reader["gender"]?.ToString() ?? "Male";
+                            int genderIndex = cmbGender.Items.IndexOf(gender);
+                            cmbGender.SelectedIndex = genderIndex >= 0 ? genderIndex : 0;
+
+                            // Date of Birth
+                            if (reader["date_of_birth"] != DBNull.Value)
+                            {
+                                dtpDateOfBirth.Value = Convert.ToDateTime(reader["date_of_birth"]);
+                            }
+
+                            // Working Hours
+                            string workFrom = reader["working_from"]?.ToString() ?? "";
+                            string workTo = reader["working_to"]?.ToString() ?? "";
+                            
+                            // Find matching time in dropdown
+                            for (int i = 0; i < cmbFromTime.Items.Count; i++)
+                            {
+                                if (cmbFromTime.Items[i].ToString().Contains(workFrom.Replace(":00:00", ":00")))
+                                {
+                                    cmbFromTime.SelectedIndex = i;
+                                    break;
+                                }
+                            }
+                            for (int i = 0; i < cmbToTime.Items.Count; i++)
+                            {
+                                if (cmbToTime.Items[i].ToString().Contains(workTo.Replace(":00:00", ":00")))
+                                {
+                                    cmbToTime.SelectedIndex = i;
+                                    break;
+                                }
+                            }
+
+                            // Salary
+                            if (reader["salary"] != DBNull.Value)
+                            {
+                                numSalary.Value = Convert.ToDecimal(reader["salary"]);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Fallback to grid data only
+                txtName.Text = row.Cells["Name"].Value?.ToString() ?? "";
+                txtCNIC.Text = row.Cells["CNIC"].Value?.ToString() ?? "";
+                txtPhone.Text = row.Cells["Phone Number"].Value?.ToString() ?? "";
+                txtEmail.Text = row.Cells["Email"].Value?.ToString() ?? "";
+                
+                string dept = row.Cells["Department"].Value?.ToString() ?? "";
+                int deptIndex = cmbDepartment.Items.IndexOf(dept);
+                cmbDepartment.SelectedIndex = deptIndex >= 0 ? deptIndex : -1;
+            }
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)
@@ -357,32 +573,96 @@ namespace Hospital_Management.Views.Controls
                 return;
             }
 
-            if (isEditMode)
+            try
             {
-                // Update existing row
-                foreach (DataRow row in staffDataTable.Rows)
+                using (var connection = DatabaseHelper.Instance.GetConnection())
                 {
-                    if (row["Staff ID"].ToString() == editingStaffId)
+                    connection.Open();
+                    string query;
+                    MySqlCommand cmd;
+
+                    if (isEditMode)
                     {
-                        row["Name"] = txtName.Text;
-                        row["CNIC"] = txtCNIC.Text;
-                        row["Phone Number"] = txtPhone.Text;
-                        row["Email"] = txtEmail.Text;
-                        row["Department"] = cmbDepartment.SelectedItem?.ToString() ?? "";
-                        break;
+                        // Update existing staff in database
+                        query = @"UPDATE staff SET name = @name, cnic = @cnic, phone_no = @phone, 
+                                  email = @email, department = @dept, date_of_birth = @dob,
+                                  password = @password, qualification = @qualification, gender = @gender,
+                                  working_from = @workingFrom, working_to = @workingTo, 
+                                  salary = @salary, address = @address
+                                  WHERE staff_id = @staffId";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@staffId", editingStaffId);
+                    }
+                    else
+                    {
+                        // Generate new staff_id
+                        string newStaffId = GenerateStaffId(connection);
+                        
+                        // Insert new staff to database
+                        query = @"INSERT INTO staff (staff_id, name, cnic, phone_no, email, department, 
+                                  date_of_birth, password, qualification, gender, working_from, working_to, salary, address) 
+                                  VALUES (@staffId, @name, @cnic, @phone, @email, @dept, 
+                                  @dob, @password, @qualification, @gender, @workingFrom, @workingTo, @salary, @address)";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@staffId", newStaffId);
+                    }
+
+                    cmd.Parameters.AddWithValue("@name", txtName.Text.Trim());
+                    cmd.Parameters.AddWithValue("@cnic", txtCNIC.Text.Trim());
+                    cmd.Parameters.AddWithValue("@phone", txtPhone.Text.Trim());
+                    cmd.Parameters.AddWithValue("@email", txtEmail.Text.Trim());
+                    cmd.Parameters.AddWithValue("@dept", cmbDepartment.SelectedItem?.ToString() ?? "General");
+                    cmd.Parameters.AddWithValue("@dob", dtpDateOfBirth.Value.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@password", string.IsNullOrEmpty(txtPassword.Text) ? "password123" : txtPassword.Text);
+                    cmd.Parameters.AddWithValue("@qualification", cmbQualification.SelectedItem?.ToString() ?? "MBBS");
+                    cmd.Parameters.AddWithValue("@gender", cmbGender.SelectedItem?.ToString() ?? "Male");
+                    cmd.Parameters.AddWithValue("@workingFrom", cmbFromTime.SelectedItem?.ToString() ?? "8:00 AM");
+                    cmd.Parameters.AddWithValue("@workingTo", cmbToTime.SelectedItem?.ToString() ?? "4:00 PM");
+                    cmd.Parameters.AddWithValue("@salary", numSalary.Value);
+                    cmd.Parameters.AddWithValue("@address", txtAddress.Text.Trim());
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        string message = isEditMode ? "Staff updated successfully!" : "Staff added successfully!";
+                        MessageBox.Show(message, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadStaffData(); // Refresh from database
+                    }
+                    else
+                    {
+                        MessageBox.Show("No changes were made.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
-                MessageBox.Show("Staff updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            else
+            catch (Exception ex)
             {
-                // Add new row
-                string newId = "MED-" + (staffDataTable.Rows.Count + 1);
-                staffDataTable.Rows.Add(newId, txtName.Text, txtCNIC.Text, txtPhone.Text, txtEmail.Text, cmbDepartment.SelectedItem?.ToString() ?? "");
-                MessageBox.Show("Staff added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Database Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             HideForm();
+        }
+
+        private string GenerateStaffId(MySqlConnection connection)
+        {
+            try
+            {
+                string query = @"SELECT MAX(CAST(SUBSTRING(staff_id, 5) AS UNSIGNED)) as max_num 
+                                 FROM staff WHERE staff_id LIKE 'MED-%'";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                object result = cmd.ExecuteScalar();
+                
+                int nextNum = 1;
+                if (result != null && result != DBNull.Value)
+                {
+                    nextNum = Convert.ToInt32(result) + 1;
+                }
+                return $"MED-{nextNum}";
+            }
+            catch
+            {
+                return $"MED-{DateTime.Now:yyyyMMddHHmmss}";
+            }
         }
 
         private void BtnCancel_Click(object sender, EventArgs e)
@@ -442,8 +722,10 @@ namespace Hospital_Management.Views.Controls
 
         private Panel pnlHeader, pnlSearch, pnlFooter, pnlForm;
         private Label lblTitle, lblIcon, lblSearchLabel, lblStatus, lblFormTitle;
-        private TextBox txtSearch, txtName, txtCNIC, txtPhone, txtEmail;
-        private ComboBox cmbDepartment;
+        private TextBox txtSearch, txtName, txtCNIC, txtPhone, txtEmail, txtPassword, txtAddress;
+        private ComboBox cmbDepartment, cmbQualification, cmbGender, cmbFromTime, cmbToTime;
+        private DateTimePicker dtpDateOfBirth;
+        private NumericUpDown numSalary;
         private DataGridView dgvStaff;
         private Button btnAdd, btnEdit, btnDelete, btnExport, btnRefresh, btnSave, btnCancel, btnClear;
 

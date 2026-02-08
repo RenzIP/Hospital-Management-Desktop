@@ -226,6 +226,8 @@ namespace Hospital_Management.Views.Controls
             this.dgvCapital.RowTemplate.Height = 40;
             this.dgvCapital.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.dgvCapital.AlternatingRowsDefaultCellStyle.BackColor = rowAlt;
+            this.dgvCapital.SelectionChanged += DgvCapital_SelectionChanged;
+            this.dgvCapital.CellDoubleClick += DgvCapital_CellDoubleClick;
         }
 
         private void CreateFormLabel(string text, int x, int y, int width) { Label lbl = new Label { Font = new Font("Segoe UI", 10F), ForeColor = Color.FromArgb(180, 200, 210), Location = new Point(x, y), Size = new Size(width, 20), Text = text }; pnlForm.Controls.Add(lbl); }
@@ -236,16 +238,35 @@ namespace Hospital_Management.Views.Controls
         {
             isEditMode = editMode;
             pnlForm.Visible = true;
-            if (editMode && row != null)
-            {
-                lblFormTitle.Text = "Edit Transaction";
-                editingId = row.Cells["ID"].Value?.ToString() ?? "";
-                cmbType.SelectedItem = row.Cells["Type"].Value?.ToString() ?? "";
-                txtCategory.Text = row.Cells["Category"].Value?.ToString() ?? "";
-                txtAmount.Text = row.Cells["Amount"].Value?.ToString().Replace("Rp ", "").Replace(",", "") ?? "";
-                txtDescription.Text = row.Cells["Description"].Value?.ToString() ?? "";
-            }
+            if (editMode && row != null) { PopulateFormFromRow(row); }
             else { lblFormTitle.Text = "Add Transaction"; ClearForm(); }
+        }
+
+        private void DgvCapital_SelectionChanged(object sender, EventArgs e)
+        {
+            if (pnlForm.Visible && isEditMode && dgvCapital.SelectedRows.Count > 0)
+            {
+                PopulateFormFromRow(dgvCapital.SelectedRows[0]);
+            }
+        }
+
+        private void DgvCapital_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dgvCapital.SelectedRows.Count > 0)
+            {
+                ShowForm(true, dgvCapital.SelectedRows[0]);
+            }
+        }
+
+        private void PopulateFormFromRow(DataGridViewRow row)
+        {
+            if (row == null) return;
+            lblFormTitle.Text = "Edit Transaction";
+            editingId = row.Cells["ID"].Value?.ToString() ?? "";
+            cmbType.SelectedItem = row.Cells["Type"].Value?.ToString() ?? "";
+            txtCategory.Text = row.Cells["Category"].Value?.ToString() ?? "";
+            txtAmount.Text = row.Cells["Amount"].Value?.ToString().Replace("Rp ", "").Replace(",", "") ?? "";
+            txtDescription.Text = row.Cells["Description"].Value?.ToString() ?? "";
         }
 
         private void HideForm() { pnlForm.Visible = false; ClearForm(); isEditMode = false; }
@@ -258,10 +279,71 @@ namespace Hospital_Management.Views.Controls
         private void BtnSave_Click(object sender, EventArgs e)
         {
             if (cmbType.SelectedIndex < 0) { MessageBox.Show("Please select type.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
-            string amountStr = "Rp " + txtAmount.Text;
-            if (isEditMode) { foreach (DataRow row in capitalDataTable.Rows) { if (row["ID"].ToString() == editingId) { row["Type"] = cmbType.SelectedItem.ToString(); row["Category"] = txtCategory.Text; row["Amount"] = amountStr; row["Date"] = dtpDate.Value.ToString("yyyy-MM-dd"); row["Description"] = txtDescription.Text; break; } } MessageBox.Show("Updated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-            else { string newId = "TRX-" + (capitalDataTable.Rows.Count + 1).ToString("000"); capitalDataTable.Rows.Add(newId, cmbType.SelectedItem.ToString(), txtCategory.Text, amountStr, dtpDate.Value.ToString("yyyy-MM-dd"), txtDescription.Text); MessageBox.Show("Added!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-            UpdateSummary(); HideForm();
+            
+            try
+            {
+                using (var connection = DatabaseHelper.Instance.GetConnection())
+                {
+                    connection.Open();
+                    string query;
+                    MySqlCommand cmd;
+                    
+                    // Parse amount
+                    decimal amount = 0;
+                    decimal.TryParse(txtAmount.Text.Replace("Rp ", "").Replace(",", "").Replace(".", ""), out amount);
+                    
+                    // Get type for database (lowercase)
+                    string typeValue = cmbType.SelectedItem.ToString().ToLower();
+
+                    if (isEditMode)
+                    {
+                        query = @"UPDATE capital SET transaction_type = @type, category = @category, 
+                                  amount = @amount, transaction_date = @date, description = @desc 
+                                  WHERE transaction_id = @trxId";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@trxId", editingId);
+                    }
+                    else
+                    {
+                        string newTrxId = GenerateTransactionId(connection);
+                        query = @"INSERT INTO capital (transaction_id, transaction_type, category, amount, transaction_date, description) 
+                                  VALUES (@trxId, @type, @category, @amount, @date, @desc)";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@trxId", newTrxId);
+                    }
+
+                    cmd.Parameters.AddWithValue("@type", typeValue);
+                    cmd.Parameters.AddWithValue("@category", txtCategory.Text.Trim());
+                    cmd.Parameters.AddWithValue("@amount", amount);
+                    cmd.Parameters.AddWithValue("@date", dtpDate.Value.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@desc", txtDescription.Text.Trim());
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show(isEditMode ? "Updated!" : "Added!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadCapitalData();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Database Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            HideForm();
+        }
+
+        private string GenerateTransactionId(MySqlConnection connection)
+        {
+            try
+            {
+                string query = "SELECT MAX(CAST(SUBSTRING(transaction_id, 5) AS UNSIGNED)) FROM capital WHERE transaction_id LIKE 'TRX-%'";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                object result = cmd.ExecuteScalar();
+                int nextNum = (result != null && result != DBNull.Value) ? Convert.ToInt32(result) + 1 : 1;
+                return $"TRX-{nextNum:000}";
+            }
+            catch { return $"TRX-{DateTime.Now:yyyyMMddHHmmss}"; }
         }
 
         private void UpdateSummary()

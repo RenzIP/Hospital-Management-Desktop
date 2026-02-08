@@ -192,13 +192,26 @@ namespace Hospital_Management.Views
                     }
                     else
                     {
-                        query = @"INSERT INTO staff (name, cnic, phone_no, date_of_birth, email, password, 
+                        query = @"INSERT INTO staff (staff_id, name, cnic, phone_no, date_of_birth, email, password, 
                                   qualification, department, gender, working_from, working_to, salary, address) 
-                                  VALUES (@name, @cnic, @phoneNo, @dob, @email, @password, 
+                                  VALUES (@staffId, @name, @cnic, @phoneNo, @dob, @email, @password, 
                                   @qualification, @department, @gender, @workingFrom, @workingTo, @salary, @address)";
                     }
 
                     MySqlCommand cmd = new MySqlCommand(query, connection);
+
+                    // Generate staff_id untuk mode tambah baru
+                    string generatedStaffId = "";
+                    if (!isEditMode)
+                    {
+                        generatedStaffId = GenerateStaffId(connection);
+                        cmd.Parameters.AddWithValue("@staffId", generatedStaffId);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@staffId", staffIdToEdit);
+                    }
+
                     cmd.Parameters.AddWithValue("@name", txtName.Text.Trim());
                     cmd.Parameters.AddWithValue("@cnic", txtCnic.Text.Trim());
                     cmd.Parameters.AddWithValue("@phoneNo", txtPhoneNo.Text.Trim());
@@ -213,24 +226,26 @@ namespace Hospital_Management.Views
                     cmd.Parameters.AddWithValue("@salary", numSalary.Value);
                     cmd.Parameters.AddWithValue("@address", txtAddress.Text.Trim());
 
-                    if (isEditMode)
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
                     {
-                        cmd.Parameters.AddWithValue("@staffId", staffIdToEdit);
+                        string dbInfo = connection.DataSource + "/" + connection.Database;
+                        string message = isEditMode 
+                            ? "Doctor information updated successfully!" 
+                            : $"Doctor registered successfully!\n\nID: {generatedStaffId}\nDB: {dbInfo}\nRows: {rowsAffected}";
+                        MessageBox.Show(message, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.Close();
                     }
-
-                    cmd.ExecuteNonQuery();
-
-                    string message = isEditMode ? "Doctor information updated successfully!" : "Doctor registered successfully!";
-                    MessageBox.Show(message, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close();
+                    else
+                    {
+                        MessageBox.Show("No rows were affected. Data may not have been saved.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                // Demo mode
-                string message = isEditMode ? "Doctor information updated successfully! (Demo mode)" : "Doctor registered successfully! (Demo mode)";
-                MessageBox.Show(message, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
+                MessageBox.Show($"Database Error: {ex.Message}\n\nDetails: {ex.ToString()}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -255,6 +270,33 @@ namespace Hospital_Management.Views
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        /// <summary>
+        /// Generate unique staff_id dengan format MED-{nomor}
+        /// </summary>
+        private string GenerateStaffId(MySqlConnection connection)
+        {
+            try
+            {
+                string query = @"SELECT MAX(CAST(SUBSTRING(staff_id, 5) AS UNSIGNED)) as max_num 
+                                 FROM staff WHERE staff_id LIKE 'MED-%'";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                object result = cmd.ExecuteScalar();
+                
+                int nextNum = 1;
+                if (result != null && result != DBNull.Value)
+                {
+                    nextNum = Convert.ToInt32(result) + 1;
+                }
+                
+                return $"MED-{nextNum}";
+            }
+            catch
+            {
+                // Fallback: gunakan timestamp jika ada error
+                return $"MED-{DateTime.Now:yyyyMMddHHmmss}";
+            }
         }
     }
 }

@@ -239,6 +239,8 @@ namespace Hospital_Management.Views.Controls
             this.dgvPatients.RowTemplate.Height = 40;
             this.dgvPatients.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.dgvPatients.AlternatingRowsDefaultCellStyle.BackColor = rowAlt;
+            this.dgvPatients.SelectionChanged += DgvPatients_SelectionChanged;
+            this.dgvPatients.CellDoubleClick += DgvPatients_CellDoubleClick;
         }
 
         private void CreateFormLabel(string text, int x, int y, int width)
@@ -285,20 +287,42 @@ namespace Hospital_Management.Views.Controls
             
             if (editMode && row != null)
             {
-                lblFormTitle.Text = "Edit Patient Information";
-                editingPatientId = row.Cells["Patient ID"].Value?.ToString() ?? "";
-                txtName.Text = row.Cells["Name"].Value?.ToString() ?? "";
-                txtCNIC.Text = row.Cells["CNIC"].Value?.ToString() ?? "";
-                txtPhone.Text = row.Cells["Phone"].Value?.ToString() ?? "";
-                txtEmail.Text = row.Cells["Email"].Value?.ToString() ?? "";
-                cmbGender.SelectedItem = row.Cells["Gender"].Value?.ToString() ?? "";
-                cmbBloodGroup.SelectedItem = row.Cells["Blood Group"].Value?.ToString() ?? "";
+                PopulateFormFromRow(row);
             }
             else
             {
                 lblFormTitle.Text = "Add New Patient";
                 ClearForm();
             }
+        }
+
+        private void DgvPatients_SelectionChanged(object sender, EventArgs e)
+        {
+            if (pnlForm.Visible && isEditMode && dgvPatients.SelectedRows.Count > 0)
+            {
+                PopulateFormFromRow(dgvPatients.SelectedRows[0]);
+            }
+        }
+
+        private void DgvPatients_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dgvPatients.SelectedRows.Count > 0)
+            {
+                ShowForm(true, dgvPatients.SelectedRows[0]);
+            }
+        }
+
+        private void PopulateFormFromRow(DataGridViewRow row)
+        {
+            if (row == null) return;
+            lblFormTitle.Text = "Edit Patient Information";
+            editingPatientId = row.Cells["Patient ID"].Value?.ToString() ?? "";
+            txtName.Text = row.Cells["Name"].Value?.ToString() ?? "";
+            txtCNIC.Text = row.Cells["CNIC"].Value?.ToString() ?? "";
+            txtPhone.Text = row.Cells["Phone"].Value?.ToString() ?? "";
+            txtEmail.Text = row.Cells["Email"].Value?.ToString() ?? "";
+            cmbGender.SelectedItem = row.Cells["Gender"].Value?.ToString() ?? "";
+            cmbBloodGroup.SelectedItem = row.Cells["Blood Group"].Value?.ToString() ?? "";
         }
 
         private void HideForm() { pnlForm.Visible = false; ClearForm(); isEditMode = false; }
@@ -329,27 +353,64 @@ namespace Hospital_Management.Views.Controls
         {
             if (string.IsNullOrWhiteSpace(txtName.Text)) { MessageBox.Show("Please enter a name.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
 
-            if (isEditMode)
+            try
             {
-                foreach (DataRow row in patientDataTable.Rows)
+                using (var connection = DatabaseHelper.Instance.GetConnection())
                 {
-                    if (row["Patient ID"].ToString() == editingPatientId)
+                    connection.Open();
+                    string query;
+                    MySqlCommand cmd;
+
+                    if (isEditMode)
                     {
-                        row["Name"] = txtName.Text; row["CNIC"] = txtCNIC.Text; row["Phone"] = txtPhone.Text;
-                        row["Email"] = txtEmail.Text; row["Gender"] = cmbGender.SelectedItem?.ToString() ?? "";
-                        row["Blood Group"] = cmbBloodGroup.SelectedItem?.ToString() ?? "";
-                        break;
+                        query = @"UPDATE patients SET name = @name, cnic = @cnic, phone_no = @phone, 
+                                  email = @email, gender = @gender, blood_group = @bloodGroup 
+                                  WHERE patient_id = @patientId";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@patientId", editingPatientId);
+                    }
+                    else
+                    {
+                        string newPatientId = GeneratePatientId(connection);
+                        query = @"INSERT INTO patients (patient_id, name, cnic, phone_no, email, gender, blood_group) 
+                                  VALUES (@patientId, @name, @cnic, @phone, @email, @gender, @bloodGroup)";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@patientId", newPatientId);
+                    }
+
+                    cmd.Parameters.AddWithValue("@name", txtName.Text.Trim());
+                    cmd.Parameters.AddWithValue("@cnic", txtCNIC.Text.Trim());
+                    cmd.Parameters.AddWithValue("@phone", txtPhone.Text.Trim());
+                    cmd.Parameters.AddWithValue("@email", txtEmail.Text.Trim());
+                    cmd.Parameters.AddWithValue("@gender", cmbGender.SelectedItem?.ToString() ?? "Male");
+                    cmd.Parameters.AddWithValue("@bloodGroup", cmbBloodGroup.SelectedItem?.ToString() ?? "O+");
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show(isEditMode ? "Patient updated!" : "Patient added!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadPatientData();
                     }
                 }
-                MessageBox.Show("Patient updated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            else
+            catch (Exception ex)
             {
-                string newId = "PAT-" + (patientDataTable.Rows.Count + 1).ToString("000");
-                patientDataTable.Rows.Add(newId, txtName.Text, txtCNIC.Text, txtPhone.Text, txtEmail.Text, cmbGender.SelectedItem?.ToString() ?? "", cmbBloodGroup.SelectedItem?.ToString() ?? "");
-                MessageBox.Show("Patient added!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Database Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             HideForm();
+        }
+
+        private string GeneratePatientId(MySqlConnection connection)
+        {
+            try
+            {
+                string query = "SELECT MAX(CAST(SUBSTRING(patient_id, 5) AS UNSIGNED)) FROM patients WHERE patient_id LIKE 'PAT-%'";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                object result = cmd.ExecuteScalar();
+                int nextNum = (result != null && result != DBNull.Value) ? Convert.ToInt32(result) + 1 : 1;
+                return $"PAT-{nextNum:000}";
+            }
+            catch { return $"PAT-{DateTime.Now:yyyyMMddHHmmss}"; }
         }
 
         private void BtnCancel_Click(object sender, EventArgs e) => HideForm();

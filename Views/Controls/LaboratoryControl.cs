@@ -215,6 +215,8 @@ namespace Hospital_Management.Views.Controls
             this.dgvLaboratory.RowTemplate.Height = 40;
             this.dgvLaboratory.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.dgvLaboratory.AlternatingRowsDefaultCellStyle.BackColor = rowAlt;
+            this.dgvLaboratory.SelectionChanged += DgvLaboratory_SelectionChanged;
+            this.dgvLaboratory.CellDoubleClick += DgvLaboratory_CellDoubleClick;
         }
 
         private void CreateFormLabel(string text, int x, int y, int width) { Label lbl = new Label { Font = new Font("Segoe UI", 10F), ForeColor = Color.FromArgb(180, 200, 210), Location = new Point(x, y), Size = new Size(width, 20), Text = text }; pnlForm.Controls.Add(lbl); }
@@ -225,15 +227,34 @@ namespace Hospital_Management.Views.Controls
         {
             isEditMode = editMode;
             pnlForm.Visible = true;
-            if (editMode && row != null)
-            {
-                lblFormTitle.Text = "Edit Lab Test";
-                editingLabId = row.Cells["Lab ID"].Value?.ToString() ?? "";
-                txtTestName.Text = row.Cells["Test Name"].Value?.ToString() ?? "";
-                txtPatient.Text = row.Cells["Patient"].Value?.ToString() ?? "";
-                cmbStatus.SelectedItem = row.Cells["Status"].Value?.ToString() ?? "";
-            }
+            if (editMode && row != null) { PopulateFormFromRow(row); }
             else { lblFormTitle.Text = "Add New Lab Test"; ClearForm(); }
+        }
+
+        private void DgvLaboratory_SelectionChanged(object sender, EventArgs e)
+        {
+            if (pnlForm.Visible && isEditMode && dgvLaboratory.SelectedRows.Count > 0)
+            {
+                PopulateFormFromRow(dgvLaboratory.SelectedRows[0]);
+            }
+        }
+
+        private void DgvLaboratory_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dgvLaboratory.SelectedRows.Count > 0)
+            {
+                ShowForm(true, dgvLaboratory.SelectedRows[0]);
+            }
+        }
+
+        private void PopulateFormFromRow(DataGridViewRow row)
+        {
+            if (row == null) return;
+            lblFormTitle.Text = "Edit Lab Test";
+            editingLabId = row.Cells["Lab ID"].Value?.ToString() ?? "";
+            txtTestName.Text = row.Cells["Test Name"].Value?.ToString() ?? "";
+            txtPatient.Text = row.Cells["Patient"].Value?.ToString() ?? "";
+            cmbStatus.SelectedItem = row.Cells["Status"].Value?.ToString() ?? "";
         }
 
         private void HideForm() { pnlForm.Visible = false; ClearForm(); isEditMode = false; }
@@ -246,9 +267,64 @@ namespace Hospital_Management.Views.Controls
         private void BtnSave_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtTestName.Text)) { MessageBox.Show("Please enter test name.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
-            if (isEditMode) { foreach (DataRow row in labDataTable.Rows) { if (row["Lab ID"].ToString() == editingLabId) { row["Test Name"] = txtTestName.Text; row["Patient"] = txtPatient.Text; row["Date"] = dtpDate.Value.ToString("yyyy-MM-dd"); row["Status"] = cmbStatus.SelectedItem?.ToString() ?? "Pending"; break; } } MessageBox.Show("Updated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-            else { string newId = "LAB-" + (labDataTable.Rows.Count + 1).ToString("000"); labDataTable.Rows.Add(newId, txtTestName.Text, txtPatient.Text, dtpDate.Value.ToString("yyyy-MM-dd"), cmbStatus.SelectedItem?.ToString() ?? "Pending"); MessageBox.Show("Added!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+            
+            try
+            {
+                using (var connection = DatabaseHelper.Instance.GetConnection())
+                {
+                    connection.Open();
+                    string query;
+                    MySqlCommand cmd;
+                    
+                    // Get status value for database
+                    string statusValue = cmbStatus.SelectedItem?.ToString()?.ToLower().Replace(" ", "_") ?? "pending";
+
+                    if (isEditMode)
+                    {
+                        query = @"UPDATE laboratory SET test_name = @testName, test_date = @testDate, status = @status 
+                                  WHERE lab_id = @labId";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@labId", editingLabId);
+                    }
+                    else
+                    {
+                        string newLabId = GenerateLabId(connection);
+                        query = @"INSERT INTO laboratory (lab_id, patient_id, doctor_id, test_name, test_date, status) 
+                                  VALUES (@labId, 1, 1, @testName, @testDate, @status)";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@labId", newLabId);
+                    }
+
+                    cmd.Parameters.AddWithValue("@testName", txtTestName.Text.Trim());
+                    cmd.Parameters.AddWithValue("@testDate", dtpDate.Value.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@status", statusValue);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show(isEditMode ? "Updated!" : "Added!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadLabData();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Database Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             HideForm();
+        }
+
+        private string GenerateLabId(MySqlConnection connection)
+        {
+            try
+            {
+                string query = "SELECT MAX(CAST(SUBSTRING(lab_id, 5) AS UNSIGNED)) FROM laboratory WHERE lab_id LIKE 'LAB-%'";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                object result = cmd.ExecuteScalar();
+                int nextNum = (result != null && result != DBNull.Value) ? Convert.ToInt32(result) + 1 : 1;
+                return $"LAB-{nextNum:000}";
+            }
+            catch { return $"LAB-{DateTime.Now:yyyyMMddHHmmss}"; }
         }
 
         private void BtnCancel_Click(object sender, EventArgs e) => HideForm();

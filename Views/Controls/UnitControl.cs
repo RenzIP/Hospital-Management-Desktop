@@ -228,6 +228,8 @@ namespace Hospital_Management.Views.Controls
             this.dgvUnits.RowTemplate.Height = 40;
             this.dgvUnits.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.dgvUnits.AlternatingRowsDefaultCellStyle.BackColor = rowAlt;
+            this.dgvUnits.SelectionChanged += DgvUnits_SelectionChanged;
+            this.dgvUnits.CellDoubleClick += DgvUnits_CellDoubleClick;
         }
 
         private void CreateFormLabel(string text, int x, int y, int width) { Label lbl = new Label { Font = new Font("Segoe UI", 10F), ForeColor = Color.FromArgb(180, 200, 210), Location = new Point(x, y), Size = new Size(width, 20), Text = text }; pnlForm.Controls.Add(lbl); }
@@ -238,17 +240,36 @@ namespace Hospital_Management.Views.Controls
         {
             isEditMode = editMode;
             pnlForm.Visible = true;
-            if (editMode && row != null)
-            {
-                lblFormTitle.Text = "Edit Unit";
-                editingId = row.Cells["Unit ID"].Value?.ToString() ?? "";
-                txtUnitName.Text = row.Cells["Unit Name"].Value?.ToString() ?? "";
-                cmbType.SelectedItem = row.Cells["Type"].Value?.ToString() ?? "";
-                txtFloor.Text = row.Cells["Floor"].Value?.ToString() ?? "";
-                txtCapacity.Text = row.Cells["Capacity"].Value?.ToString() ?? "";
-                cmbStatus.SelectedItem = row.Cells["Status"].Value?.ToString() ?? "";
-            }
+            if (editMode && row != null) { PopulateFormFromRow(row); }
             else { lblFormTitle.Text = "Add New Unit"; ClearForm(); }
+        }
+
+        private void DgvUnits_SelectionChanged(object sender, EventArgs e)
+        {
+            if (pnlForm.Visible && isEditMode && dgvUnits.SelectedRows.Count > 0)
+            {
+                PopulateFormFromRow(dgvUnits.SelectedRows[0]);
+            }
+        }
+
+        private void DgvUnits_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dgvUnits.SelectedRows.Count > 0)
+            {
+                ShowForm(true, dgvUnits.SelectedRows[0]);
+            }
+        }
+
+        private void PopulateFormFromRow(DataGridViewRow row)
+        {
+            if (row == null) return;
+            lblFormTitle.Text = "Edit Unit";
+            editingId = row.Cells["Unit ID"].Value?.ToString() ?? "";
+            txtUnitName.Text = row.Cells["Unit Name"].Value?.ToString() ?? "";
+            cmbType.SelectedItem = row.Cells["Type"].Value?.ToString() ?? "";
+            txtFloor.Text = row.Cells["Floor"].Value?.ToString() ?? "";
+            txtCapacity.Text = row.Cells["Capacity"].Value?.ToString() ?? "";
+            cmbStatus.SelectedItem = row.Cells["Status"].Value?.ToString() ?? "";
         }
 
         private void HideForm() { pnlForm.Visible = false; ClearForm(); isEditMode = false; }
@@ -261,9 +282,89 @@ namespace Hospital_Management.Views.Controls
         private void BtnSave_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtUnitName.Text)) { MessageBox.Show("Please enter unit name.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
-            if (isEditMode) { foreach (DataRow row in unitDataTable.Rows) { if (row["Unit ID"].ToString() == editingId) { row["Unit Name"] = txtUnitName.Text; row["Type"] = cmbType.SelectedItem?.ToString() ?? ""; row["Floor"] = txtFloor.Text; row["Capacity"] = txtCapacity.Text; row["Status"] = cmbStatus.SelectedItem?.ToString() ?? "Active"; break; } } MessageBox.Show("Updated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-            else { string newId = "UNIT-" + (unitDataTable.Rows.Count + 1).ToString("000"); unitDataTable.Rows.Add(newId, txtUnitName.Text, cmbType.SelectedItem?.ToString() ?? "", txtFloor.Text, txtCapacity.Text, cmbStatus.SelectedItem?.ToString() ?? "Active"); MessageBox.Show("Added!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+            
+            try
+            {
+                using (var connection = DatabaseHelper.Instance.GetConnection())
+                {
+                    connection.Open();
+                    string query;
+                    MySqlCommand cmd;
+                    
+                    // Map UI type to DB enum
+                    string uiType = cmbType.SelectedItem?.ToString() ?? "ward";
+                    string dbType = MapTypeToDbEnum(uiType);
+                    
+                    // Parse capacity and floor
+                    int capacity = 0;
+                    int.TryParse(txtCapacity.Text, out capacity);
+                    int floor = 0;
+                    int.TryParse(txtFloor.Text, out floor);
+
+                    if (isEditMode)
+                    {
+                        query = @"UPDATE units SET unit_name = @name, unit_type = @type, 
+                                  capacity = @capacity, floor_number = @floor, is_active = @active 
+                                  WHERE unit_id = @unitId";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@unitId", editingId);
+                    }
+                    else
+                    {
+                        string newUnitId = GenerateUnitId(connection);
+                        query = @"INSERT INTO units (unit_id, unit_name, unit_type, capacity, floor_number, is_active) 
+                                  VALUES (@unitId, @name, @type, @capacity, @floor, @active)";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@unitId", newUnitId);
+                    }
+
+                    cmd.Parameters.AddWithValue("@name", txtUnitName.Text.Trim());
+                    cmd.Parameters.AddWithValue("@type", dbType);
+                    cmd.Parameters.AddWithValue("@capacity", capacity);
+                    cmd.Parameters.AddWithValue("@floor", floor);
+                    cmd.Parameters.AddWithValue("@active", cmbStatus.SelectedItem?.ToString() == "Active" ? 1 : 0);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show(isEditMode ? "Updated!" : "Added!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadUnitData();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Database Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             HideForm();
+        }
+
+        private string MapTypeToDbEnum(string uiType)
+        {
+            switch (uiType)
+            {
+                case "Emergency": return "emergency";
+                case "Intensive Care": return "icu";
+                case "General": return "ward";
+                case "Pediatric": return "ward";
+                case "Surgery": return "ot";
+                case "Diagnostic": return "laboratory";
+                case "Outpatient": return "outpatient";
+                default: return "ward";
+            }
+        }
+
+        private string GenerateUnitId(MySqlConnection connection)
+        {
+            try
+            {
+                string query = "SELECT MAX(CAST(SUBSTRING(unit_id, 6) AS UNSIGNED)) FROM units WHERE unit_id LIKE 'UNIT-%'";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                object result = cmd.ExecuteScalar();
+                int nextNum = (result != null && result != DBNull.Value) ? Convert.ToInt32(result) + 1 : 1;
+                return $"UNIT-{nextNum:000}";
+            }
+            catch { return $"UNIT-{DateTime.Now:yyyyMMddHHmmss}"; }
         }
 
         private void BtnCancel_Click(object sender, EventArgs e) => HideForm();
