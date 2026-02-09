@@ -103,7 +103,7 @@ namespace Hospital_Management.Views.Controls
             // Form Panel
             this.pnlForm.BackColor = formBg;
             this.pnlForm.Dock = DockStyle.Top;
-            this.pnlForm.Size = new Size(800, 180);
+            this.pnlForm.Size = new Size(800, 220);
             this.pnlForm.Visible = false;
 
             this.lblFormTitle.Font = new Font("Segoe UI Semibold", 14F);
@@ -164,15 +164,33 @@ namespace Hospital_Management.Views.Controls
             this.cmbBloodGroup.DropDownStyle = ComboBoxStyle.DropDownList;
             this.cmbBloodGroup.Items.AddRange(new object[] { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" });
 
-            CreateFormButton(btnCancel, "Cancel", Color.FromArgb(100, 100, 110), 450, 130);
-            CreateFormButton(btnClear, "Clear", Color.FromArgb(80, 130, 140), 560, 130);
-            CreateFormButton(btnSave, "Save", Color.FromArgb(0, 150, 136), 670, 130);
+            CreateFormLabel("DOB:", 20, 115, 50);
+            this.dtpDOB = new DateTimePicker();
+            this.dtpDOB.Font = new Font("Segoe UI", 10F);
+            this.dtpDOB.Format = DateTimePickerFormat.Short;
+            this.dtpDOB.Location = new Point(75, 112);
+            this.dtpDOB.Size = new Size(150, 25);
+            this.dtpDOB.CalendarMonthBackground = cardBg;
+            this.dtpDOB.CalendarForeColor = textColor;
+
+            CreateFormLabel("Address:", 240, 115, 60);
+            this.txtAddress = new TextBox();
+            this.txtAddress.BackColor = cardBg;
+            this.txtAddress.BorderStyle = BorderStyle.FixedSingle;
+            this.txtAddress.Font = new Font("Segoe UI", 10F);
+            this.txtAddress.ForeColor = textColor;
+            this.txtAddress.Location = new Point(300, 112);
+            this.txtAddress.Size = new Size(320, 25);
+
+            CreateFormButton(btnCancel, "Cancel", Color.FromArgb(100, 100, 110), 450, 165);
+            CreateFormButton(btnClear, "Clear", Color.FromArgb(80, 130, 140), 560, 165);
+            CreateFormButton(btnSave, "Save", Color.FromArgb(0, 150, 136), 670, 165);
 
             btnSave.Click += BtnSave_Click;
             btnCancel.Click += BtnCancel_Click;
             btnClear.Click += BtnClear_Click;
 
-            this.pnlForm.Controls.AddRange(new Control[] { lblFormTitle, txtName, txtCNIC, txtPhone, txtEmail, cmbGender, cmbBloodGroup, btnSave, btnCancel, btnClear });
+            this.pnlForm.Controls.AddRange(new Control[] { lblFormTitle, txtName, txtCNIC, txtPhone, txtEmail, cmbGender, cmbBloodGroup, dtpDOB, txtAddress, btnSave, btnCancel, btnClear });
 
             // DataGridView
             SetupDataGridView();
@@ -323,10 +341,13 @@ namespace Hospital_Management.Views.Controls
             txtEmail.Text = row.Cells["Email"].Value?.ToString() ?? "";
             cmbGender.SelectedItem = row.Cells["Gender"].Value?.ToString() ?? "";
             cmbBloodGroup.SelectedItem = row.Cells["Blood Group"].Value?.ToString() ?? "";
+            using (var _ = new System.IO.StringReader("")) { /* NOOP */ } // Avoiding complex block issues
+            if (DateTime.TryParse(row.Cells["Date of Birth"].Value?.ToString(), out DateTime dob)) dtpDOB.Value = dob;
+            txtAddress.Text = row.Cells["Address"].Value?.ToString() ?? "";
         }
 
         private void HideForm() { pnlForm.Visible = false; ClearForm(); isEditMode = false; }
-        private void ClearForm() { txtName.Clear(); txtCNIC.Clear(); txtPhone.Clear(); txtEmail.Clear(); cmbGender.SelectedIndex = -1; cmbBloodGroup.SelectedIndex = -1; }
+        private void ClearForm() { txtName.Clear(); txtCNIC.Clear(); txtPhone.Clear(); txtEmail.Clear(); cmbGender.SelectedIndex = -1; cmbBloodGroup.SelectedIndex = -1; dtpDOB.Value = DateTime.Now; txtAddress.Clear(); }
 
         private void BtnAdd_Click(object sender, EventArgs e) => ShowForm(false);
 
@@ -364,7 +385,8 @@ namespace Hospital_Management.Views.Controls
                     if (isEditMode)
                     {
                         query = @"UPDATE patients SET name = @name, cnic = @cnic, phone_no = @phone, 
-                                  email = @email, gender = @gender, blood_group = @bloodGroup 
+                                  email = @email, gender = @gender, blood_group = @bloodGroup, 
+                                  date_of_birth = @dob, address = @address 
                                   WHERE patient_id = @patientId";
                         cmd = new MySqlCommand(query, connection);
                         cmd.Parameters.AddWithValue("@patientId", editingPatientId);
@@ -372,8 +394,8 @@ namespace Hospital_Management.Views.Controls
                     else
                     {
                         string newPatientId = GeneratePatientId(connection);
-                        query = @"INSERT INTO patients (patient_id, name, cnic, phone_no, email, gender, blood_group) 
-                                  VALUES (@patientId, @name, @cnic, @phone, @email, @gender, @bloodGroup)";
+                        query = @"INSERT INTO patients (patient_id, name, cnic, phone_no, email, gender, blood_group, date_of_birth, address) 
+                                  VALUES (@patientId, @name, @cnic, @phone, @email, @gender, @bloodGroup, @dob, @address)";
                         cmd = new MySqlCommand(query, connection);
                         cmd.Parameters.AddWithValue("@patientId", newPatientId);
                     }
@@ -384,6 +406,8 @@ namespace Hospital_Management.Views.Controls
                     cmd.Parameters.AddWithValue("@email", txtEmail.Text.Trim());
                     cmd.Parameters.AddWithValue("@gender", cmbGender.SelectedItem?.ToString() ?? "Male");
                     cmd.Parameters.AddWithValue("@bloodGroup", cmbBloodGroup.SelectedItem?.ToString() ?? "O+");
+                    cmd.Parameters.AddWithValue("@dob", dtpDOB.Value.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@address", txtAddress.Text.Trim());
 
                     int rowsAffected = cmd.ExecuteNonQuery();
                     if (rowsAffected > 0)
@@ -423,7 +447,7 @@ namespace Hospital_Management.Views.Controls
                 using (var conn = DatabaseHelper.Instance.GetConnection())
                 {
                     conn.Open();
-                    MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT patient_id as 'Patient ID', name as 'Name', cnic as 'CNIC', phone_no as 'Phone', email as 'Email', gender as 'Gender', blood_group as 'Blood Group' FROM patients", conn);
+                    MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT patient_id as 'Patient ID', name as 'Name', cnic as 'CNIC', phone_no as 'Phone', email as 'Email', gender as 'Gender', blood_group as 'Blood Group', date_of_birth as 'Date of Birth', address as 'Address' FROM patients", conn);
                     patientDataTable = new DataTable();
                     adapter.Fill(patientDataTable);
                     dgvPatients.DataSource = patientDataTable;
@@ -435,8 +459,8 @@ namespace Hospital_Management.Views.Controls
         private void LoadSampleData()
         {
             patientDataTable = new DataTable();
-            patientDataTable.Columns.AddRange(new DataColumn[] { new DataColumn("Patient ID"), new DataColumn("Name"), new DataColumn("CNIC"), new DataColumn("Phone"), new DataColumn("Email"), new DataColumn("Gender"), new DataColumn("Blood Group") });
-            patientDataTable.Rows.Add("PAT-001", "Ahmad Malik", "12345-6789012-3", "0321-1234567", "ahmad@email.com", "Male", "O+");
+            patientDataTable.Columns.AddRange(new DataColumn[] { new DataColumn("Patient ID"), new DataColumn("Name"), new DataColumn("CNIC"), new DataColumn("Phone"), new DataColumn("Email"), new DataColumn("Gender"), new DataColumn("Blood Group"), new DataColumn("Date of Birth"), new DataColumn("Address") });
+            patientDataTable.Rows.Add("PAT-001", "Ahmad Malik", "12345-6789012-3", "0321-1234567", "ahmad@email.com", "Male", "O+", "1990-01-01", "123 Main St");
             patientDataTable.Rows.Add("PAT-002", "Fatima Khan", "23456-7890123-4", "0322-2345678", "fatima@email.com", "Female", "A+");
             patientDataTable.Rows.Add("PAT-003", "Ali Hassan", "34567-8901234-5", "0323-3456789", "ali@email.com", "Male", "B+");
             patientDataTable.Rows.Add("PAT-004", "Sara Ahmed", "45678-9012345-6", "0324-4567890", "sara@email.com", "Female", "AB+");
@@ -459,5 +483,7 @@ namespace Hospital_Management.Views.Controls
         private ComboBox cmbGender, cmbBloodGroup;
         private DataGridView dgvPatients;
         private Button btnAdd, btnEdit, btnDelete, btnExport, btnRefresh, btnSave, btnCancel, btnClear;
+        private DateTimePicker dtpDOB;
+        private TextBox txtAddress;
     }
 }

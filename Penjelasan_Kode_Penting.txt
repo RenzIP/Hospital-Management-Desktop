@@ -1,0 +1,151 @@
+PENJELASAN KODE LENGKAP PROYEK HOSPITAL MANAGEMENT SYSTEM
+===========================================================
+
+Dokumen ini berisi penjelasan mendalam mengenai seluruh komponen kode dalam proyek Hospital Management System, mencakup struktur, logika utama, helper, dan alur aplikasi.
+
+1. STRUKTUR UTAMA PROYEK
+------------------------
+Proyek ini menggunakan arsitektur MVC (Model-View-Controller) yang disesuaikan untuk Windows Forms:
+- **Models**: Struktur data (blueprint obyek).
+- **Views**: Tampilan antarmuka (Form & UserControl).
+- **Controllers**: Logika bisnis (misal: login).
+- **Helpers**: Fungsi bantuan umum (Database, Excel, Role).
+
+---
+
+2. PENJELASAN MODUL & LOGIKA (File per File)
+--------------------------------------------
+
+### A. DATA & KONEKSI
+
+#### 1. DatabaseHelper.cs (Folder: Helpers)
+Mengelola koneksi ke database MySQL.
+- **Pola Singleton**: Menggunakan `Instance` agar hanya ada satu jalur koneksi yang terbuka, menghemat resource.
+- **Method `GetConnection()`**: Mengembalikan objek koneksi yang siap pakai.
+- **Contoh**:
+  ```csharp
+  var conn = DatabaseHelper.Instance.GetConnection();
+  conn.Open();
+  ```
+
+### B. OTENTIKASI & KEAMANAN
+
+#### 1. LoginController.cs (Folder: Controllers)
+- **Fungsi**: Memverifikasi username/email dan password.
+- **Logika**: Query `SELECT` ke tabel `users`. Jika ditemukan, data user disimpan ke sesi aplikasi (`CurrentUser`).
+
+#### 2. RoleHelper.cs (Folder: Helpers)
+Mengatur hak akses berdasarkan peran (Admin, Doctor, Nurse, Stuff).
+- **Logika Cek Peran**:
+  ```csharp
+  public static bool IsAdmin() => CurrentUser.Role == "admin";
+  ```
+- **Logika Akses Menu (`CanAccessMenu`)**:
+  Menentukan siapa yang boleh melihat menu tertentu.
+  - *Capital/Units* -> Hanya Admin.
+  - *Laboratory* -> Admin, Dokter, Perawat.
+  - *Home/Patients* -> Semua orang.
+
+### C. TAMPILAN UTAMA (VIEWS)
+
+#### 1. HomeForm.cs (Folder: Views)
+Jendela utama aplikasi yang menampung semua menu.
+- **Navigasi**: Menggunakan `Panel` untuk memuat `UserControl` (konten halaman) secara dinamis tanpa membuka jendela baru.
+- **Logika Load Menu**:
+  ```csharp
+  private void LoadContent(UserControl control) {
+      pnlMainContent.Controls.Clear(); // Hapus konten lama
+      pnlMainContent.Controls.Add(control); // Tambahkan konten baru
+  }
+  ```
+- **Keamanan Tampilan**: Menu disembunyikan otomatis jika user tidak punya hak akses (menggunakan `RoleHelper.CanAccessMenu`).
+
+### D. MANAJEMEN DATA (CRUD)
+
+Hampir semua modul (Pasien, Staff, Unit, Lab) menggunakan pola kode yang sama. Contoh di `PatientControl.cs` dan `StaffForm.cs`:
+
+#### 1. Menampilkan Data (`LoadData`)
+- Mengambil data dari database dengan `SELECT`.
+- Menampilkannya ke `DataGridView` (tabel).
+- Memberikan nama kolom alias (misal `date_of_birth` menjadi `Date of Birth`) agar mudah dibaca user.
+
+#### 2. Menambah & Mengedit Data
+Dikendalikan oleh tombol Save (`BtnSave_Click`):
+- **Insert (Tambah Baru)**:
+  `INSERT INTO patients (...) VALUES (...)`
+- **Update (Edit Data)**:
+  `UPDATE patients SET ... WHERE id = ...`
+- **Parameter SQL**: Selalu menggunakan `@nama_param` untuk mencegah error karakter khusus dan serangan SQL Injection.
+
+#### 3. Menghapus Data
+- Konfirmasi user dengan `MessageBox.Show`.
+- Query `DELETE FROM ... WHERE id = ...`.
+
+### E. FITUR EKSTRA
+
+#### 1. ExcelHelper.cs (Folder: Helpers)
+Fitur untuk export data tabel ke file Excel.
+- **Cara Kerja**: Membuat file HTML dengan tabel yang bisa dibaca oleh Excel sebagai spreadsheet.
+- **Fungsi `ExportToExcel(DataGridView)`**: Menerima input tabel layar dan menyimpannya jadi file `.xls`.
+
+#### 2. Pencarian Data
+Menggunakan fitur filter pada `DataTable`:
+```csharp
+string filter = txtSearch.Text;
+table.DefaultView.RowFilter = $"Name LIKE '%{filter}%' OR ID LIKE '%{filter}%'";
+```
+Ini memungkinkan pencarian instan tanpa perlu query ulang ke database.
+
+---
+
+3. CONTOH-CONTOH SYNTAX PENTING
+-------------------------------
+
+#### A. Membuat Variabel
+```csharp
+string nama = "Dr. Budi";      // Teks
+int umur = 30;                 // Angka bulat
+DateTime hariIni = DateTime.Now; // Waktu sekarang
+bool isAdmin = false;          // Logika benar/salah
+```
+
+#### B. Struktur Kondisi (If-Else)
+```csharp
+if (txtPassword.Text == "") {
+    MessageBox.Show("Password wajib diisi!");
+} else {
+    Login();
+}
+```
+
+#### C. Looping (Perulangan)
+Digunakan untuk membaca data baris per baris.
+```csharp
+foreach (DataGridViewRow baris in tabel.Rows) {
+    string id = baris.Cells["ID"].Value.ToString();
+}
+```
+
+#### D. Try-Catch (Penanganan Error)
+Penting untuk operasi database agar aplikasi tidak "Force Close" jika internet mati atau database error.
+```csharp
+try {
+    // Coba koneksi database
+    koneksi.Open();
+} catch (Exception ex) {
+    // Jika gagal, tampilkan pesan error tapi jangan tutup aplikasi
+    MessageBox.Show("Gagal koneksi: " + ex.Message);
+}
+```
+
+---
+
+4. RINGKASAN ALUR APLIKASI
+--------------------------
+1. **Start**: `Program.cs` memanggil `SplashForm`.
+2. **Login**: User memasukkan kredensial -> `LoginController` cek DB.
+3. **Main Menu**: Jika sukses, `HomeForm` terbuka. Menu disesuaikan peran user (cek `RoleHelper`).
+4. **Operasi**: User membuka menu (misal Pasien), `PatientControl` dimuat.
+5. **Aksi**: User bisa Add/Edit/Export data (menggunakan `DatabaseHelper` & `ExcelHelper`).
+
+Dokumen ini mencakup seluruh komponen kode yang ada dalam source code saat ini.

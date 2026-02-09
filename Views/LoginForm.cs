@@ -95,50 +95,58 @@ namespace Hospital_Management.Views
                 return;
             }
 
-            // Use controller for authentication
-            var controller = new LoginController();
-            bool isLoginSuccess = controller.PerformLogin(username, password);
-
-            if (isLoginSuccess)
+            try
             {
-                // Role and department are now fetched from database via CurrentUser
-                string role = CurrentUser.Role ?? "User";
-                string department = CurrentUser.Department ?? "";
-                string welcomeMessage = $"Welcome, {CurrentUser.Username}!\nRole: {role}";
-                
-                if (!string.IsNullOrEmpty(department))
+                // Use controller for authentication
+                var controller = new LoginController();
+                bool isLoginSuccess = controller.PerformLogin(username, password);
+
+                if (isLoginSuccess)
                 {
-                    welcomeMessage += $"\nDepartment: {department}";
-                }
-
-                MessageBox.Show(welcomeMessage, "Login Successful", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
-                HomeForm mainForm = new HomeForm();
-                bool isLoggingOut = false;
-                
-                mainForm.LogoutRequested += () => {
-                    isLoggingOut = true;
-                    this.Show();
-                    txtPassword.Clear();
-                };
-                
-                mainForm.FormClosed += (s, args) => {
-                    if (!isLoggingOut)
+                    // Role and department are now fetched from database via CurrentUser
+                    string role = CurrentUser.Role ?? "User";
+                    string department = CurrentUser.Department ?? "";
+                    string welcomeMessage = $"Welcome, {CurrentUser.Username}!\nRole: {role}";
+                    
+                    if (!string.IsNullOrEmpty(department))
                     {
-                        this.Close(); // Only close app if user clicked X, not logout
+                        welcomeMessage += $"\nDepartment: {department}";
                     }
-                };
-                
-                this.Hide();
-                mainForm.Show();
+
+                    MessageBox.Show(welcomeMessage, "Login Successful", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    
+                    HomeForm mainForm = new HomeForm();
+                    bool isLoggingOut = false;
+                    
+                    mainForm.LogoutRequested += () => {
+                        isLoggingOut = true;
+                        this.Show();
+                        txtPassword.Clear();
+                    };
+                    
+                    mainForm.FormClosed += (s, args) => {
+                        if (!isLoggingOut)
+                        {
+                            this.Close(); // Only close app if user clicked X, not logout
+                        }
+                    };
+                    
+                    this.Hide();
+                    mainForm.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid Username or Password. Please try again.", "Authentication Failed", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtPassword.Clear();
+                    txtPassword.Focus();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Invalid Username or Password. Please try again.", "Authentication Failed", 
+                MessageBox.Show($"Login Error: {ex.Message}", "Connection Error", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtPassword.Clear();
-                txtPassword.Focus();
             }
         }
 

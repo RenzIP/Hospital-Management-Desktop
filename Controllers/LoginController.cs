@@ -21,46 +21,38 @@ namespace Hospital_Management.Controllers
         /// <returns>True if authentication successful</returns>
         public bool PerformLogin(string usernameOrEmail, string password)
         {
-            try
+            using (var connection = _db.GetConnection())
             {
-                using (var connection = _db.GetConnection())
+                connection.Open();
+
+                string query = @"
+                    SELECT id, username, email, role, department 
+                    FROM users 
+                    WHERE (username = @username OR email = @email) 
+                    AND password = @password 
+                    AND is_active = TRUE";
+
+                using (var command = new MySqlCommand(query, connection))
                 {
-                    connection.Open();
+                    command.Parameters.AddWithValue("@username", usernameOrEmail);
+                    command.Parameters.AddWithValue("@email", usernameOrEmail);
+                    command.Parameters.AddWithValue("@password", password);
 
-                    string query = @"
-                        SELECT id, username, email, role, department 
-                        FROM users 
-                        WHERE (username = @username OR email = @email) 
-                        AND password = @password 
-                        AND is_active = TRUE";
-
-                    using (var command = new MySqlCommand(query, connection))
+                    using (var reader = command.ExecuteReader())
                     {
-                        command.Parameters.AddWithValue("@username", usernameOrEmail);
-                        command.Parameters.AddWithValue("@email", usernameOrEmail);
-                        command.Parameters.AddWithValue("@password", password);
-
-                        using (var reader = command.ExecuteReader())
+                        if (reader.Read())
                         {
-                            if (reader.Read())
-                            {
-                                // Store user info for session
-                                CurrentUser.Id = reader.GetInt32("id");
-                                CurrentUser.Username = reader.GetString("username");
-                                CurrentUser.Email = reader.IsDBNull(reader.GetOrdinal("email")) ? "" : reader.GetString("email");
-                                CurrentUser.Role = reader.GetString("role");
-                                CurrentUser.Department = reader.IsDBNull(reader.GetOrdinal("department")) ? "" : reader.GetString("department");
+                            // Store user info for session
+                            CurrentUser.Id = reader.GetInt32("id");
+                            CurrentUser.Username = reader.GetString("username");
+                            CurrentUser.Email = reader.IsDBNull(reader.GetOrdinal("email")) ? "" : reader.GetString("email");
+                            CurrentUser.Role = reader.GetString("role");
+                            CurrentUser.Department = reader.IsDBNull(reader.GetOrdinal("department")) ? "" : reader.GetString("department");
 
-                                return true;
-                            }
+                            return true;
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                // Log error (in production, use proper logging)
-                System.Diagnostics.Debug.WriteLine($"Login error: {ex.Message}");
             }
 
             return false;
