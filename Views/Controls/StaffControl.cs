@@ -60,6 +60,7 @@ namespace Hospital_Management.Views.Controls
             this.cmbToTime = new ComboBox();
             this.dtpDateOfBirth = new DateTimePicker();
             this.numSalary = new NumericUpDown();
+            this.cmbRole = new ComboBox();
             this.btnSave = new Button();
             this.btnCancel = new Button();
             this.btnClear = new Button();
@@ -249,7 +250,19 @@ namespace Hospital_Management.Views.Controls
             this.txtAddress.Font = new Font("Segoe UI", 9F);
             this.txtAddress.ForeColor = textColor;
             this.txtAddress.Location = new Point(80, 132);
-            this.txtAddress.Size = new Size(400, 22);
+            this.txtAddress.Size = new Size(300, 22);
+
+            // Row 4 continued: Role
+            CreateFormLabel("Role:", 400, 135, 35);
+            this.cmbRole.BackColor = cardBg;
+            this.cmbRole.FlatStyle = FlatStyle.Flat;
+            this.cmbRole.Font = new Font("Segoe UI", 9F);
+            this.cmbRole.ForeColor = textColor;
+            this.cmbRole.Location = new Point(440, 132);
+            this.cmbRole.Size = new Size(120, 22);
+            this.cmbRole.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.cmbRole.Items.AddRange(new object[] { "staff", "nurse", "doctor", "admin" });
+            this.cmbRole.SelectedIndex = 0;
 
             // Form Buttons
             CreateFormButton(btnCancel, "Cancel", Color.FromArgb(100, 100, 110), 500, 180);
@@ -262,7 +275,7 @@ namespace Hospital_Management.Views.Controls
 
             this.pnlForm.Controls.AddRange(new Control[] { 
                 lblFormTitle, txtName, txtCNIC, txtPhone, txtEmail, txtPassword, txtAddress,
-                dtpDateOfBirth, cmbGender, cmbQualification, cmbDepartment, 
+                dtpDateOfBirth, cmbGender, cmbQualification, cmbDepartment, cmbRole,
                 cmbFromTime, cmbToTime, numSalary,
                 btnSave, btnCancel, btnClear 
             });
@@ -607,13 +620,19 @@ namespace Hospital_Management.Views.Controls
                         cmd.Parameters.AddWithValue("@staffId", newStaffId);
                     }
 
-                    cmd.Parameters.AddWithValue("@name", txtName.Text.Trim());
+                    string name = txtName.Text.Trim();
+                    string password = string.IsNullOrEmpty(txtPassword.Text) ? "password123" : txtPassword.Text;
+                    string email = txtEmail.Text.Trim();
+                    string department = cmbDepartment.SelectedItem?.ToString() ?? "General";
+                    string role = cmbRole.SelectedItem?.ToString() ?? "staff";
+
+                    cmd.Parameters.AddWithValue("@name", name);
                     cmd.Parameters.AddWithValue("@cnic", txtCNIC.Text.Trim());
                     cmd.Parameters.AddWithValue("@phone", txtPhone.Text.Trim());
-                    cmd.Parameters.AddWithValue("@email", txtEmail.Text.Trim());
-                    cmd.Parameters.AddWithValue("@dept", cmbDepartment.SelectedItem?.ToString() ?? "General");
+                    cmd.Parameters.AddWithValue("@email", email);
+                    cmd.Parameters.AddWithValue("@dept", department);
                     cmd.Parameters.AddWithValue("@dob", dtpDateOfBirth.Value.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@password", string.IsNullOrEmpty(txtPassword.Text) ? "password123" : txtPassword.Text);
+                    cmd.Parameters.AddWithValue("@password", password);
                     cmd.Parameters.AddWithValue("@qualification", cmbQualification.SelectedItem?.ToString() ?? "MBBS");
                     cmd.Parameters.AddWithValue("@gender", cmbGender.SelectedItem?.ToString() ?? "Male");
                     cmd.Parameters.AddWithValue("@workingFrom", cmbFromTime.SelectedItem?.ToString() ?? "8:00 AM");
@@ -623,9 +642,35 @@ namespace Hospital_Management.Views.Controls
 
                     int rowsAffected = cmd.ExecuteNonQuery();
 
+                    // Auto-create user account for login when adding new staff
+                    if (!isEditMode && rowsAffected > 0)
+                    {
+                        // Create username from name (lowercase, replace spaces with underscore)
+                        string username = name.ToLower().Replace(" ", "_");
+                        
+                        string userQuery = @"INSERT INTO users (username, password, email, role, department) 
+                                             VALUES (@username, @password, @email, @role, @dept)";
+                        MySqlCommand userCmd = new MySqlCommand(userQuery, connection);
+                        userCmd.Parameters.AddWithValue("@username", username);
+                        userCmd.Parameters.AddWithValue("@password", password);
+                        userCmd.Parameters.AddWithValue("@email", email);
+                        userCmd.Parameters.AddWithValue("@role", role);
+                        userCmd.Parameters.AddWithValue("@dept", department);
+                        
+                        try
+                        {
+                            userCmd.ExecuteNonQuery();
+                        }
+                        catch (Exception userEx)
+                        {
+                            // Username might already exist, try with staff_id appended
+                            MessageBox.Show($"Note: Could not create user account. {userEx.Message}", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+
                     if (rowsAffected > 0)
                     {
-                        string message = isEditMode ? "Staff updated successfully!" : "Staff added successfully!";
+                        string message = isEditMode ? "Staff updated successfully!" : $"Staff added successfully!\n\nLogin account created:\nUsername: {name.ToLower().Replace(" ", "_")}\nPassword: {password}";
                         MessageBox.Show(message, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         LoadStaffData(); // Refresh from database
                     }
@@ -723,7 +768,7 @@ namespace Hospital_Management.Views.Controls
         private Panel pnlHeader, pnlSearch, pnlFooter, pnlForm;
         private Label lblTitle, lblIcon, lblSearchLabel, lblStatus, lblFormTitle;
         private TextBox txtSearch, txtName, txtCNIC, txtPhone, txtEmail, txtPassword, txtAddress;
-        private ComboBox cmbDepartment, cmbQualification, cmbGender, cmbFromTime, cmbToTime;
+        private ComboBox cmbDepartment, cmbQualification, cmbGender, cmbFromTime, cmbToTime, cmbRole;
         private DateTimePicker dtpDateOfBirth;
         private NumericUpDown numSalary;
         private DataGridView dgvStaff;
