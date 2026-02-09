@@ -261,7 +261,17 @@ namespace Hospital_Management.Views.Controls
             this.cmbRole.Location = new Point(440, 132);
             this.cmbRole.Size = new Size(120, 22);
             this.cmbRole.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cmbRole.Items.AddRange(new object[] { "staff", "nurse", "doctor", "admin" });
+            
+            // Role-based filtering: Doctor can only add staff/nurse, Admin can add all
+            if (RoleHelper.IsAdmin())
+            {
+                this.cmbRole.Items.AddRange(new object[] { "staff", "nurse", "doctor", "admin" });
+            }
+            else
+            {
+                // Doctor and other roles can only add staff and nurse
+                this.cmbRole.Items.AddRange(new object[] { "staff", "nurse" });
+            }
             this.cmbRole.SelectedIndex = 0;
 
             // Form Buttons

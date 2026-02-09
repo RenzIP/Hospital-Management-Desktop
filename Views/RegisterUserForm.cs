@@ -156,6 +156,43 @@ namespace Hospital_Management.Views
 
                         cmd.ExecuteNonQuery();
                     }
+
+                    // Also insert into staff table for sync
+                    using (var staffCmd = conn.CreateCommand())
+                    {
+                        // Generate staff_id
+                        string staffId = GenerateStaffId(conn);
+                        
+                        staffCmd.CommandText = @"INSERT INTO staff (staff_id, name, email, password, department) 
+                                                VALUES (@staffId, @name, @email, @password, @department)";
+
+                        var staffIdParam = staffCmd.CreateParameter();
+                        staffIdParam.ParameterName = "@staffId";
+                        staffIdParam.Value = staffId;
+                        staffCmd.Parameters.Add(staffIdParam);
+
+                        var nameParam = staffCmd.CreateParameter();
+                        nameParam.ParameterName = "@name";
+                        nameParam.Value = txtUsername.Text.Trim(); // Use username as name
+                        staffCmd.Parameters.Add(nameParam);
+
+                        var emailParam = staffCmd.CreateParameter();
+                        emailParam.ParameterName = "@email";
+                        emailParam.Value = txtEmail.Text.Trim();
+                        staffCmd.Parameters.Add(emailParam);
+
+                        var passwordParam = staffCmd.CreateParameter();
+                        passwordParam.ParameterName = "@password";
+                        passwordParam.Value = txtPassword.Text;
+                        staffCmd.Parameters.Add(passwordParam);
+
+                        var deptParam = staffCmd.CreateParameter();
+                        deptParam.ParameterName = "@department";
+                        deptParam.Value = cboDepartment.SelectedItem.ToString();
+                        staffCmd.Parameters.Add(deptParam);
+
+                        staffCmd.ExecuteNonQuery();
+                    }
                 }
 
                 MessageBox.Show("User registered successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -172,6 +209,21 @@ namespace Hospital_Management.Views
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private string GenerateStaffId(System.Data.IDbConnection conn)
+        {
+            try
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT MAX(CAST(SUBSTRING(staff_id, 5) AS UNSIGNED)) FROM staff WHERE staff_id LIKE 'MED-%'";
+                    object result = cmd.ExecuteScalar();
+                    int nextNum = (result != null && result != DBNull.Value) ? Convert.ToInt32(result) + 1 : 1;
+                    return $"MED-{nextNum}";
+                }
+            }
+            catch { return $"MED-{DateTime.Now:yyyyMMddHHmmss}"; }
         }
 
         private void pnlCard_Paint(object sender, PaintEventArgs e)
