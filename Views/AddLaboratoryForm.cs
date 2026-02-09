@@ -24,7 +24,7 @@ namespace Hospital_Management.Views
         public AddLaboratoryForm(string labId)
         {
             InitializeComponent();
-            SetupForm();
+            SetupForm();    
             LoadDropdowns();
             labIdToEdit = labId;
             isEditMode = true;
