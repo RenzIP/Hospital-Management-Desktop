@@ -139,32 +139,30 @@ namespace Hospital_Management.Views
                 {
                     connection.Open();
                     string query;
+                    MySqlCommand cmd;
 
                     if (isEditMode)
                     {
                         query = @"UPDATE units SET unit_name = @unitName, unit_type = @unitType, 
-                                  floor = @floor, capacity = @capacity, status = @status, 
-                                  description = @description 
+                                  floor_number = @floor, capacity = @capacity, is_active = @active 
                                   WHERE unit_id = @unitId";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@unitId", unitIdToEdit);
                     }
                     else
                     {
-                        query = @"INSERT INTO units (unit_name, unit_type, floor, capacity, status, description) 
-                                  VALUES (@unitName, @unitType, @floor, @capacity, @status, @description)";
+                        string newUnitId = GenerateUnitId(connection);
+                        query = @"INSERT INTO units (unit_id, unit_name, unit_type, floor_number, capacity, is_active) 
+                                  VALUES (@unitId, @unitName, @unitType, @floor, @capacity, @active)";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@unitId", newUnitId);
                     }
 
-                    MySqlCommand cmd = new MySqlCommand(query, connection);
                     cmd.Parameters.AddWithValue("@unitName", txtUnitName.Text.Trim());
                     cmd.Parameters.AddWithValue("@unitType", cmbType.SelectedItem.ToString());
                     cmd.Parameters.AddWithValue("@floor", cmbFloor.SelectedItem.ToString());
                     cmd.Parameters.AddWithValue("@capacity", (int)numCapacity.Value);
-                    cmd.Parameters.AddWithValue("@status", cmbStatus.SelectedItem.ToString());
-                    cmd.Parameters.AddWithValue("@description", txtDescription.Text.Trim());
-
-                    if (isEditMode)
-                    {
-                        cmd.Parameters.AddWithValue("@unitId", unitIdToEdit);
-                    }
+                    cmd.Parameters.AddWithValue("@active", cmbStatus.SelectedItem.ToString() == "active" ? 1 : 0);
 
                     cmd.ExecuteNonQuery();
 
@@ -193,6 +191,19 @@ namespace Hospital_Management.Views
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private string GenerateUnitId(MySqlConnection connection)
+        {
+            try
+            {
+                string query = "SELECT MAX(CAST(SUBSTRING(unit_id, 6) AS UNSIGNED)) FROM units WHERE unit_id LIKE 'UNIT-%'";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                object result = cmd.ExecuteScalar();
+                int nextNum = (result != null && result != DBNull.Value) ? Convert.ToInt32(result) + 1 : 1;
+                return $"UNIT-{nextNum:000}";
+            }
+            catch { return $"UNIT-{DateTime.Now:yyyyMMddHHmmss}"; }
         }
     }
 }

@@ -184,6 +184,7 @@ namespace Hospital_Management.Views
                 {
                     connection.Open();
                     string query;
+                    MySqlCommand cmd;
 
                     if (isEditMode)
                     {
@@ -191,14 +192,18 @@ namespace Hospital_Management.Views
                                   test_name = @testName, test_date = @testDate, result = @result, 
                                   status = @status, notes = @notes 
                                   WHERE lab_id = @labId";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@labId", labIdToEdit);
                     }
                     else
                     {
-                        query = @"INSERT INTO laboratory (patient_id, doctor_id, test_name, test_date, result, status, notes) 
-                                  VALUES (@patientId, @doctorId, @testName, @testDate, @result, @status, @notes)";
+                        string newLabId = GenerateLabId(connection);
+                        query = @"INSERT INTO laboratory (lab_id, patient_id, doctor_id, test_name, test_date, result, status, notes) 
+                                  VALUES (@labId, @patientId, @doctorId, @testName, @testDate, @result, @status, @notes)";
+                        cmd = new MySqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("@labId", newLabId);
                     }
 
-                    MySqlCommand cmd = new MySqlCommand(query, connection);
                     cmd.Parameters.AddWithValue("@patientId", cmbPatient.SelectedValue);
                     cmd.Parameters.AddWithValue("@doctorId", cmbDoctor.SelectedValue);
                     cmd.Parameters.AddWithValue("@testName", cmbTestName.Text);
@@ -206,11 +211,6 @@ namespace Hospital_Management.Views
                     cmd.Parameters.AddWithValue("@result", txtResult.Text.Trim());
                     cmd.Parameters.AddWithValue("@status", cmbStatus.SelectedItem.ToString());
                     cmd.Parameters.AddWithValue("@notes", txtNotes.Text.Trim());
-
-                    if (isEditMode)
-                    {
-                        cmd.Parameters.AddWithValue("@labId", labIdToEdit);
-                    }
 
                     cmd.ExecuteNonQuery();
 
@@ -239,6 +239,19 @@ namespace Hospital_Management.Views
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private string GenerateLabId(MySqlConnection connection)
+        {
+            try
+            {
+                string query = "SELECT MAX(CAST(SUBSTRING(lab_id, 5) AS UNSIGNED)) FROM laboratory WHERE lab_id LIKE 'LAB-%'";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                object result = cmd.ExecuteScalar();
+                int nextNum = (result != null && result != DBNull.Value) ? Convert.ToInt32(result) + 1 : 1;
+                return $"LAB-{nextNum:000}";
+            }
+            catch { return $"LAB-{DateTime.Now:yyyyMMddHHmmss}"; }
         }
     }
 }

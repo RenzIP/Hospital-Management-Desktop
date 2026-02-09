@@ -10,6 +10,8 @@ namespace Hospital_Management.Views.Controls
     public partial class LaboratoryControl : UserControl
     {
         private DataTable labDataTable;
+        private DataTable patientsTable;
+        private DataTable doctorsTable;
         private bool isEditMode = false;
         private string editingLabId = "";
 
@@ -24,6 +26,7 @@ namespace Hospital_Management.Views.Controls
         public LaboratoryControl()
         {
             InitializeComponent();
+            LoadDropdowns();
             LoadLabData();
         }
 
@@ -47,7 +50,8 @@ namespace Hospital_Management.Views.Controls
             this.pnlForm = new Panel();
             this.lblFormTitle = new Label();
             this.txtTestName = new TextBox();
-            this.txtPatient = new TextBox();
+            this.cmbPatient = new ComboBox();
+            this.cmbDoctor = new ComboBox();
             this.dtpDate = new DateTimePicker();
             this.cmbStatus = new ComboBox();
             this.btnSave = new Button();
@@ -119,28 +123,38 @@ namespace Hospital_Management.Views.Controls
             this.txtTestName.Size = new Size(150, 25);
 
             CreateFormLabel("Patient:", 270, 45, 55);
-            this.txtPatient.BackColor = cardBg;
-            this.txtPatient.BorderStyle = BorderStyle.FixedSingle;
-            this.txtPatient.Font = new Font("Segoe UI", 10F);
-            this.txtPatient.ForeColor = textColor;
-            this.txtPatient.Location = new Point(330, 42);
-            this.txtPatient.Size = new Size(150, 25);
+            this.cmbPatient.BackColor = cardBg;
+            this.cmbPatient.FlatStyle = FlatStyle.Flat;
+            this.cmbPatient.Font = new Font("Segoe UI", 10F);
+            this.cmbPatient.ForeColor = textColor;
+            this.cmbPatient.Location = new Point(330, 42);
+            this.cmbPatient.Size = new Size(150, 25);
+            this.cmbPatient.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            CreateFormLabel("Date:", 495, 45, 40);
+            CreateFormLabel("Doctor:", 495, 45, 50);
+            this.cmbDoctor.BackColor = cardBg;
+            this.cmbDoctor.FlatStyle = FlatStyle.Flat;
+            this.cmbDoctor.Font = new Font("Segoe UI", 10F);
+            this.cmbDoctor.ForeColor = textColor;
+            this.cmbDoctor.Location = new Point(550, 42);
+            this.cmbDoctor.Size = new Size(150, 25);
+            this.cmbDoctor.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            CreateFormLabel("Date:", 20, 80, 40);
             this.dtpDate.Font = new Font("Segoe UI", 10F);
-            this.dtpDate.Location = new Point(540, 42);
-            this.dtpDate.Size = new Size(150, 25);
+            this.dtpDate.Location = new Point(65, 77);
+            this.dtpDate.Size = new Size(130, 25);
             this.dtpDate.Format = DateTimePickerFormat.Short;
 
-            CreateFormLabel("Status:", 20, 80, 55);
+            CreateFormLabel("Status:", 210, 80, 55);
             this.cmbStatus.BackColor = cardBg;
             this.cmbStatus.FlatStyle = FlatStyle.Flat;
             this.cmbStatus.Font = new Font("Segoe UI", 10F);
             this.cmbStatus.ForeColor = textColor;
-            this.cmbStatus.Location = new Point(80, 77);
+            this.cmbStatus.Location = new Point(270, 77);
             this.cmbStatus.Size = new Size(120, 25);
             this.cmbStatus.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cmbStatus.Items.AddRange(new object[] { "Pending", "In Progress", "Completed" });
+            this.cmbStatus.Items.AddRange(new object[] { "pending", "in_progress", "completed" });
 
             CreateFormButton(btnCancel, "Cancel", Color.FromArgb(100, 100, 110), 450, 95);
             CreateFormButton(btnClear, "Clear", Color.FromArgb(80, 130, 140), 560, 95);
@@ -150,7 +164,7 @@ namespace Hospital_Management.Views.Controls
             btnCancel.Click += BtnCancel_Click;
             btnClear.Click += BtnClear_Click;
 
-            this.pnlForm.Controls.AddRange(new Control[] { lblFormTitle, txtTestName, txtPatient, dtpDate, cmbStatus, btnSave, btnCancel, btnClear });
+            this.pnlForm.Controls.AddRange(new Control[] { lblFormTitle, txtTestName, cmbPatient, cmbDoctor, dtpDate, cmbStatus, btnSave, btnCancel, btnClear });
 
             // DataGridView
             SetupDataGridView();
@@ -253,12 +267,13 @@ namespace Hospital_Management.Views.Controls
             lblFormTitle.Text = "Edit Lab Test";
             editingLabId = row.Cells["Lab ID"].Value?.ToString() ?? "";
             txtTestName.Text = row.Cells["Test Name"].Value?.ToString() ?? "";
-            txtPatient.Text = row.Cells["Patient"].Value?.ToString() ?? "";
-            cmbStatus.SelectedItem = row.Cells["Status"].Value?.ToString() ?? "";
+            cmbPatient.SelectedValue = GetPatientIdByName(row.Cells["Patient"].Value?.ToString() ?? "");
+            cmbDoctor.SelectedValue = GetDoctorIdByName(row.Cells["Doctor"].Value?.ToString() ?? "");
+            cmbStatus.Text = row.Cells["Status"].Value?.ToString()?.ToLower().Replace(" ", "_") ?? "pending";
         }
 
         private void HideForm() { pnlForm.Visible = false; ClearForm(); isEditMode = false; }
-        private void ClearForm() { txtTestName.Clear(); txtPatient.Clear(); dtpDate.Value = DateTime.Now; cmbStatus.SelectedIndex = -1; }
+        private void ClearForm() { txtTestName.Clear(); cmbPatient.SelectedIndex = 0; cmbDoctor.SelectedIndex = 0; dtpDate.Value = DateTime.Now; cmbStatus.SelectedIndex = 0; }
 
         private void BtnAdd_Click(object sender, EventArgs e) => ShowForm(false);
         private void BtnEdit_Click(object sender, EventArgs e) { if (dgvLaboratory.SelectedRows.Count > 0) ShowForm(true, dgvLaboratory.SelectedRows[0]); else MessageBox.Show("Please select a test.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
@@ -267,6 +282,8 @@ namespace Hospital_Management.Views.Controls
         private void BtnSave_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtTestName.Text)) { MessageBox.Show("Please enter test name.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+            if (cmbPatient.SelectedValue == null) { MessageBox.Show("Please select a patient.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+            if (cmbDoctor.SelectedValue == null) { MessageBox.Show("Please select a doctor.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
             
             try
             {
@@ -277,11 +294,12 @@ namespace Hospital_Management.Views.Controls
                     MySqlCommand cmd;
                     
                     // Get status value for database
-                    string statusValue = cmbStatus.SelectedItem?.ToString()?.ToLower().Replace(" ", "_") ?? "pending";
+                    string statusValue = cmbStatus.SelectedItem?.ToString() ?? "pending";
 
                     if (isEditMode)
                     {
-                        query = @"UPDATE laboratory SET test_name = @testName, test_date = @testDate, status = @status 
+                        query = @"UPDATE laboratory SET patient_id = @patientId, doctor_id = @doctorId, 
+                                  test_name = @testName, test_date = @testDate, status = @status 
                                   WHERE lab_id = @labId";
                         cmd = new MySqlCommand(query, connection);
                         cmd.Parameters.AddWithValue("@labId", editingLabId);
@@ -290,11 +308,13 @@ namespace Hospital_Management.Views.Controls
                     {
                         string newLabId = GenerateLabId(connection);
                         query = @"INSERT INTO laboratory (lab_id, patient_id, doctor_id, test_name, test_date, status) 
-                                  VALUES (@labId, 1, 1, @testName, @testDate, @status)";
+                                  VALUES (@labId, @patientId, @doctorId, @testName, @testDate, @status)";
                         cmd = new MySqlCommand(query, connection);
                         cmd.Parameters.AddWithValue("@labId", newLabId);
                     }
 
+                    cmd.Parameters.AddWithValue("@patientId", cmbPatient.SelectedValue);
+                    cmd.Parameters.AddWithValue("@doctorId", cmbDoctor.SelectedValue);
                     cmd.Parameters.AddWithValue("@testName", txtTestName.Text.Trim());
                     cmd.Parameters.AddWithValue("@testDate", dtpDate.Value.ToString("yyyy-MM-dd"));
                     cmd.Parameters.AddWithValue("@status", statusValue);
@@ -327,6 +347,80 @@ namespace Hospital_Management.Views.Controls
             catch { return $"LAB-{DateTime.Now:yyyyMMddHHmmss}"; }
         }
 
+        private void LoadDropdowns()
+        {
+            try
+            {
+                using (var connection = DatabaseHelper.Instance.GetConnection())
+                {
+                    connection.Open();
+                    
+                    // Load patients
+                    string patientQuery = "SELECT id, name FROM patients ORDER BY name";
+                    MySqlDataAdapter patientAdapter = new MySqlDataAdapter(patientQuery, connection);
+                    patientsTable = new DataTable();
+                    patientAdapter.Fill(patientsTable);
+                    
+                    cmbPatient.DisplayMember = "name";
+                    cmbPatient.ValueMember = "id";
+                    cmbPatient.DataSource = patientsTable;
+
+                    // Load doctors (from staff)
+                    string doctorQuery = "SELECT id, name FROM staff ORDER BY name";
+                    MySqlDataAdapter doctorAdapter = new MySqlDataAdapter(doctorQuery, connection);
+                    doctorsTable = new DataTable();
+                    doctorAdapter.Fill(doctorsTable);
+                    
+                    cmbDoctor.DisplayMember = "name";
+                    cmbDoctor.ValueMember = "id";
+                    cmbDoctor.DataSource = doctorsTable;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Fallback sample data
+                patientsTable = new DataTable();
+                patientsTable.Columns.Add("id", typeof(int));
+                patientsTable.Columns.Add("name", typeof(string));
+                patientsTable.Rows.Add(1, "Ahmad Yusuf");
+                patientsTable.Rows.Add(2, "Siti Rahayu");
+                cmbPatient.DisplayMember = "name";
+                cmbPatient.ValueMember = "id";
+                cmbPatient.DataSource = patientsTable;
+
+                doctorsTable = new DataTable();
+                doctorsTable.Columns.Add("id", typeof(int));
+                doctorsTable.Columns.Add("name", typeof(string));
+                doctorsTable.Rows.Add(1, "Dr. John Smith");
+                doctorsTable.Rows.Add(2, "Dr. Sarah Johnson");
+                cmbDoctor.DisplayMember = "name";
+                cmbDoctor.ValueMember = "id";
+                cmbDoctor.DataSource = doctorsTable;
+            }
+        }
+
+        private int GetPatientIdByName(string name)
+        {
+            if (patientsTable == null) return 0;
+            foreach (DataRow row in patientsTable.Rows)
+            {
+                if (row["name"].ToString() == name)
+                    return Convert.ToInt32(row["id"]);
+            }
+            return 0;
+        }
+
+        private int GetDoctorIdByName(string name)
+        {
+            if (doctorsTable == null) return 0;
+            foreach (DataRow row in doctorsTable.Rows)
+            {
+                if (row["name"].ToString() == name)
+                    return Convert.ToInt32(row["id"]);
+            }
+            return 0;
+        }
+
         private void BtnCancel_Click(object sender, EventArgs e) => HideForm();
         private void BtnClear_Click(object sender, EventArgs e) => ClearForm();
 
@@ -339,9 +433,11 @@ namespace Hospital_Management.Views.Controls
                     conn.Open(); 
                     string query = @"SELECT l.lab_id as 'Lab ID', l.test_name as 'Test Name', 
                                      COALESCE(p.name, 'Unknown') as 'Patient', 
+                                     COALESCE(s.name, 'Unknown') as 'Doctor',
                                      l.test_date as 'Date', l.status as 'Status' 
                                      FROM laboratory l 
                                      LEFT JOIN patients p ON l.patient_id = p.id 
+                                     LEFT JOIN staff s ON l.doctor_id = s.id
                                      ORDER BY l.test_date DESC";
                     MySqlDataAdapter adapter = new MySqlDataAdapter(query, conn); 
                     labDataTable = new DataTable(); 
@@ -371,9 +467,9 @@ namespace Hospital_Management.Views.Controls
 
         private Panel pnlHeader, pnlSearch, pnlFooter, pnlForm;
         private Label lblTitle, lblIcon, lblSearchLabel, lblStatus, lblFormTitle;
-        private TextBox txtSearch, txtTestName, txtPatient;
+        private TextBox txtSearch, txtTestName;
         private DateTimePicker dtpDate;
-        private ComboBox cmbStatus;
+        private ComboBox cmbPatient, cmbDoctor, cmbStatus;
         private DataGridView dgvLaboratory;
         private Button btnAdd, btnEdit, btnDelete, btnExport, btnRefresh, btnSave, btnCancel, btnClear;
     }
