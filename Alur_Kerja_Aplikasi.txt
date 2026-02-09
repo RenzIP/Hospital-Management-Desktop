@@ -1,0 +1,76 @@
+ALUR KERJA (WORKFLOW) HOSPITAL MANAGEMENT SYSTEM
+================================================
+
+Dokumen ini menjelaskan langkah-langkah menjalankan aplikasi dari awal hingga penggunaan fitur-fitur utamanya.
+
+1. MENJALANKAN APLIKASI (STARTUP)
+---------------------------------
+1.  **Splash Screen**: Saat aplikasi dibuka, akan muncul layar loading (`SplashForm`) sejenak.
+2.  **Login Screen**: Aplikasi otomatis masuk ke halaman Login (`LoginForm`).
+
+2. PROSES LOGIN
+---------------
+Pengguna harus memasukkan kredensial yang valid.
+- **Admin**:
+  - Username: `admin`
+  - Password: `admin123`
+  - *Hak Akses*: Full Access (Semua Menu).
+- **Dokter**:
+  - Username: `dr.john`
+  - Password: `password123`
+  - *Hak Akses*: Pasien, Staff, Lab, Jadwal.
+- **Perawat/Staff**:
+  - Username: `nurse.mary`
+  - Password: `password123`
+  - *Hak Akses*: Terbatas (Pasien, Lab).
+
+*Jika login berhasil, Anda akan diarahkan ke Dashboard Utama (`HomeForm`).*
+
+3. DASHBOARD & NAVIGASI
+-----------------------
+Di halaman utama, menu di sebelah kiri akan **otomatis menyesuaikan** dengan ROLE user yang login (misal: Staff biasa tidak akan melihat menu "Keuangan/Capital").
+
+4. FITUR-FITUR UTAMA
+--------------------
+
+### A. PATIENT MANAGEMENT (Manajemen Pasien)
+1.  Klik menu **Patients**.
+2.  **Melihat Data**: Daftar pasien muncul di tabel.
+3.  **Tambah Pasien**:
+    - Klik tombol `+ Add`.
+    - Isi form: Nama, CNIC, No HP, Tanggal Lahir (Baru!), Alamat (Baru!), Gender, dll.
+    - Klik `Save`. Data tersimpan ke database.
+4.  **Edit Pasien**:
+    - Pilih salah satu baris pasien di tabel.
+    - Klik tombol `Edit` atau klik dua kali pada baris tersebut.
+    - Ubah data, lalu `Save`.
+5.  **Export**: Klik tombol `Export` mencetak data tabel ke file Excel.
+
+### B. STAFF MANAGEMENT (Manajemen Karyawan)
+*Hanya bisa diakses Admin/Dokter*
+1.  Klik menu **Staff**.
+2.  **Tambah Dokter/Staff**:
+    - Klik `+ Add`.
+    - Isi data diri, kualifikasi, departemen, dan gaji.
+    - *Catatan*: Password yang diisi di sini hanya untuk data staff, belum otomatis membuat user login.
+3.  **Hapus Staff**: Pilih baris, klik ikon Hapus (Trash).
+
+### C. LABORATORY (Laboratorium)
+1.  Klik menu **Laboratory**.
+2.  Menu ini digunakan untuk mencatat hasil tes lab pasien.
+3.  Bisa memasukkan nama tes, tanggal, dan hasil diagnosa.
+
+### D. CAPITAL & UNITS (Keuangan & Unit RS)
+*Khusus Admin*
+- **Capital**: Mengelola pemasukan dan pengeluaran RS.
+- **Units**: Mengelola data ruangan/bangsal (Kapasitas, Lantai, Penanggung Jawab).
+
+5. LOGOUT (KELUAR)
+------------------
+1.  Klik tombol **Logout** di pojok kiri bawah sidebar.
+2.  Konfirmasi "Yes".
+3.  Aplikasi kembali ke halaman Login.
+
+---
+**Catatan Teknis:**
+Pastikan Database MySQL `hospital_management` sudah aktif (XAMPP/MySQL Service running) sebelum menjalankan aplikasi agar tidak terjadi error koneksi.

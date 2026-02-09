@@ -1,0 +1,165 @@
+KONSEP PEMROGRAMAN C# DALAM PROYEK HOSPITAL MANAGEMENT
+======================================================
+
+Dokumen ini menjelaskan konsep-konsep teknis C# yang ada di dalam source code proyek ini. Semua contoh diambil langsung dari file proyek Anda.
+
+1. VARIABEL & TIPE DATA
+-----------------------
+Variabel adalah tempat menyimpan data.
+- **Contoh (PatientControl.cs)**:
+  ```csharp
+  private bool isEditMode = false;              // Tipe: Boolean (Benar/Salah)
+  private string editingPatientId = "";         // Tipe: String (Teks)
+  private Color bgColor = Color.FromArgb(...);  // Tipe: Class/Struct (Warna)
+  ```
+
+2. CLASS, OBJECT, CONSTRUCTOR
+-----------------------------
+- **Class**: Cetak biru (Blueprint).
+  *File: Models/Patient.cs* -> `public class Patient { ... }`
+- **Object**: Wujud nyata dari class.
+  *File: Views/LoginForm.cs* -> `LoginController controller = new LoginController();`
+- **Constructor**: Method yang jalan pertama kali saat object dibuat.
+  *File: Views/StaffForm.cs*:
+  ```csharp
+  public StaffForm() { // <-- Constructor
+      InitializeComponent();
+      LoadStaffData();
+  }
+  ```
+
+3. FUNCTION & METHOD
+--------------------
+Blok kode yang melakukan tugas tertentu.
+- **Void Method** (Tidak mengembalikan nilai):
+  `private void ClearForm() { ... }` (di PatientControl.cs)
+- **Return Method** (Mengembalikan nilai, misal bool):
+  `public bool PerformLogin(...)` (di LoginController.cs)
+
+4. ACCESS MODIFIER
+------------------
+Menentukan siapa yang boleh mengakses kode.
+- **public**: Bisa diakses dari mana saja.
+  `public class Patient` (di Models/Patient.cs)
+- **private**: Hanya bisa diakses di file/class itu sendiri.
+  `private DataTable patientDataTable;` (di PatientControl.cs)
+- **internal**: Bisa diakses di satu project (assembly).
+  `internal static class Program` (di Program.cs)
+
+5. PROPERTIES
+-------------
+Cara aman mengakses variabel class (Get/Set).
+*File: Models/Patient.cs*:
+```csharp
+public string Name { get; set; }  // Bisa dibaca (get) dan diubah (set)
+public int Age {                  // Hanya bisa dibaca (Read-only), hitung otomatis
+    get { return DateTime.Today.Year - DateOfBirth.Year; }
+}
+```
+
+6. CONTROL FLOW (Alur Program)
+------------------------------
+- **IF-ELSE**: Percabangan logika.
+  *File: LoginController.cs*:
+  ```csharp
+  if (reader.Read()) { return true; } else { return false; }
+  ```
+- **LOOP (Foreach)**: Perulangan data.
+  *File: Helpers/ExcelHelper.cs*:
+  ```csharp
+  foreach (DataGridViewRow row in dataGridView.Rows) { ... }
+  ```
+- **SWITCH**: Pilihan ganda.
+  *File: Helpers/RoleHelper.cs*:
+  ```csharp
+  switch (menuName.ToLower()) {
+      case "home": return true;
+      case "capital": return role == ROLE_ADMIN;
+      // ...
+  }
+  ```
+
+7. OOP (OBJECT ORIENTED PROGRAMMING)
+------------------------------------
+- **Encapsulation**: Menyembunyikan data sensitif.
+  Variabel `_connectionString` di `DatabaseHelper.cs` bersifat `private`, hanya bisa diakses lewat method `GetConnection()`.
+- **Inheritance**: Pewarisan sifat.
+  `public partial class PatientForm : Form`
+  Artinya: `PatientForm` mewarisi semua sifat dari `Form` (bisa jadi jendela, punya tombol close, dll).
+- **Polymorphism**: Satu nama banyak bentuk.
+  Di C# ini sering lewat Overloading (nama method sama, parameter beda), misal `MessageBox.Show(...)` bisa dipanggil dengan 1 parameter teks atau 2 parameter teks & judul.
+
+8. INTERFACE & ABSTRACT CLASS
+-----------------------------
+Proyek ini belum menggunakan Interface/Abstract buatan sendiri secara eksplisit, tetapi menggunakan bawaan .NET:
+- **Interface**: `IDisposable` digunakan dalam blok `using (...)` di `DatabaseHelper` untuk membersihkan memori otomatis.
+- **Abstract Class**: `Form` dan `UserControl` adalah base class yang Anda turunkan (inherit).
+
+9. COLLECTION (Kumpulan Data)
+-----------------------------
+- **DataTable**: Kumpulan baris dan kolom seperti Excel.
+  *File: PatientControl.cs* -> `patientDataTable` digunakan untuk menampung data dari SQL.
+- **List / Array**:
+  *File: PatientControl.cs*:
+  `this.pnlForm.Controls.AddRange(new Control[] { ... });` (Array of Controls).
+
+10. EXCEPTION HANDLING (Error Handling)
+---------------------------------------
+Mencegah aplikasi crash saat error.
+*File: Views/LoginForm.cs*:
+```csharp
+try {
+    // Coba login
+    controller.PerformLogin(...);
+} catch (Exception ex) {
+    // Jika eror, munculkan pesan, jangan tutup aplikasi
+    MessageBox.Show("Login Error: " + ex.Message);
+}
+```
+
+11. LINQ (Language Integrated Query)
+------------------------------------
+Cara query data di memori.
+Meskipun query utama pakai SQL, filter di `PatientControl.cs` mirip konsep LINQ:
+`patientDataTable.DefaultView.RowFilter = $"Name LIKE '%{filter}%'"`
+
+12. EVENT & DELEGATE
+--------------------
+- **Event**: Aksi yang terjadi (misal Klik).
+  *File: PatientControl.cs* -> `btnSave.Click += BtnSave_Click;`
+- **Delegate**: Pointer ke method.
+  *File: Views/HomeForm.cs*: `public event Action LogoutRequested;`
+
+13. FILE & IO
+-------------
+Operasi tulis/baca file.
+- **File.WriteAllText**:
+  *File: Helpers/ExcelHelper.cs* -> Menyimpan string HTML menjadi file `.xls` di harddisk.
+
+14. ASYNCHRONOUS (Async/Await)
+------------------------------
+Proyek ini berjalan secara **Synchronous** (berurutan), artinya saat query database jalan, aplikasi mungkin 'freeze' sebentar.
+*Konsep Async*: Menggunakan `async Task` dan `await` agar aplikasi tidak freeze. Ini belum diterapkan di kode saat ini (umum di aplikasi WinForms modern).
+
+15. DATABASE (ADO.NET)
+----------------------
+Teknologi untuk akses database.
+- **MySqlConnection**: Koneksi ke DB.
+- **MySqlCommand**: Mengirim perintah SQL (SELECT, INSERT).
+- **MySqlDataReader**: Membaca hasil query baris per baris.
+  Lihat implementasinya di `Controllers/LoginController.cs` dan `Helpers/DatabaseHelper.cs`.
+
+16. ENUM & STRUCT
+-----------------
+- **Struct**: Tipe data ringan.
+  Contoh di kode: `DateTime` (waktu), `Color` (warna), `Point` (koordinat lokasi tombol), `Size` (ukuran form).
+- **Enum**: Kumpulan konstanta.
+  Contoh: `DialogResult.Yes`, `DialogResult.OK`, `MessageBoxIcon.Warning`.
+
+17. ARCHITECTURE (MVC)
+----------------------
+Proyek ini mengikuti pola MVC (Model-View-Controller):
+- **Model**: `Models/Patient.cs` (Data).
+- **View**: `Views/PatientForm.cs` (Tampilan).
+- **Controller**: `Controllers/LoginController.cs` (Logika).
+Ini membuat kode rapi dan terpisah tugasnya.
