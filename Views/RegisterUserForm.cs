@@ -73,6 +73,13 @@ namespace Hospital_Management.Views
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(txtCNIC.Text))
+            {
+                MessageBox.Show("Please enter CNIC.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtCNIC.Focus();
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(txtPassword.Text))
             {
                 MessageBox.Show("Please enter a password.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -163,13 +170,18 @@ namespace Hospital_Management.Views
                         // Generate staff_id
                         string staffId = GenerateStaffId(conn);
                         
-                        staffCmd.CommandText = @"INSERT INTO staff (staff_id, name, email, password, department) 
-                                                VALUES (@staffId, @name, @email, @password, @department)";
+                        staffCmd.CommandText = @"INSERT INTO staff (staff_id, name, email, cnic, password, department) 
+                                                VALUES (@staffId, @name, @email, @cnic, @password, @department)";
 
                         var staffIdParam = staffCmd.CreateParameter();
                         staffIdParam.ParameterName = "@staffId";
                         staffIdParam.Value = staffId;
                         staffCmd.Parameters.Add(staffIdParam);
+
+                        var cnicParam = staffCmd.CreateParameter();
+                        cnicParam.ParameterName = "@cnic";
+                        cnicParam.Value = txtCNIC.Text.Trim();
+                        staffCmd.Parameters.Add(cnicParam);
 
                         var nameParam = staffCmd.CreateParameter();
                         nameParam.ParameterName = "@name";

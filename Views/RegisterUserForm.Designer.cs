@@ -44,6 +44,8 @@ namespace Hospital_Management.Views
             this.pnlCard.Controls.Add(this.txtUsername);
             this.pnlCard.Controls.Add(this.lblEmail);
             this.pnlCard.Controls.Add(this.txtEmail);
+            this.pnlCard.Controls.Add(this.lblCNIC);
+            this.pnlCard.Controls.Add(this.txtCNIC);
             this.pnlCard.Controls.Add(this.lblPassword);
             this.pnlCard.Controls.Add(this.txtPassword);
             this.pnlCard.Controls.Add(this.lblConfirmPassword);
@@ -54,9 +56,9 @@ namespace Hospital_Management.Views
             this.pnlCard.Controls.Add(this.cboDepartment);
             this.pnlCard.Controls.Add(this.btnRegister);
             this.pnlCard.Controls.Add(this.btnCancel);
-            this.pnlCard.Location = new System.Drawing.Point(100, 50);
+            this.pnlCard.Location = new System.Drawing.Point(100, 30);
             this.pnlCard.Name = "pnlCard";
-            this.pnlCard.Size = new System.Drawing.Size(400, 500);
+            this.pnlCard.Size = new System.Drawing.Size(400, 560);
             this.pnlCard.TabIndex = 0;
             this.pnlCard.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlCard_Paint);
             // 
@@ -111,57 +113,77 @@ namespace Hospital_Management.Views
             this.txtEmail.Size = new System.Drawing.Size(320, 27);
             this.txtEmail.TabIndex = 4;
             // 
+            // lblCNIC
+            // 
+            this.lblCNIC.AutoSize = true;
+            this.lblCNIC.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblCNIC.ForeColor = System.Drawing.Color.FromArgb(80, 80, 80);
+            this.lblCNIC.Location = new System.Drawing.Point(40, 180);
+            this.lblCNIC.Name = "lblCNIC";
+            this.lblCNIC.Size = new System.Drawing.Size(35, 15);
+            this.lblCNIC.TabIndex = 5;
+            this.lblCNIC.Text = "CNIC";
+            // 
+            // txtCNIC
+            // 
+            this.txtCNIC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtCNIC.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.txtCNIC.Location = new System.Drawing.Point(40, 198);
+            this.txtCNIC.Name = "txtCNIC";
+            this.txtCNIC.Size = new System.Drawing.Size(320, 27);
+            this.txtCNIC.TabIndex = 6;
+            // 
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
             this.lblPassword.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblPassword.ForeColor = System.Drawing.Color.FromArgb(80, 80, 80);
-            this.lblPassword.Location = new System.Drawing.Point(40, 180);
+            this.lblPassword.Location = new System.Drawing.Point(40, 235);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(57, 15);
-            this.lblPassword.TabIndex = 5;
+            this.lblPassword.TabIndex = 7;
             this.lblPassword.Text = "Password";
             // 
             // txtPassword
             // 
             this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPassword.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.txtPassword.Location = new System.Drawing.Point(40, 198);
+            this.txtPassword.Location = new System.Drawing.Point(40, 253);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(320, 27);
-            this.txtPassword.TabIndex = 6;
+            this.txtPassword.TabIndex = 8;
             // 
             // lblConfirmPassword
             // 
             this.lblConfirmPassword.AutoSize = true;
             this.lblConfirmPassword.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblConfirmPassword.ForeColor = System.Drawing.Color.FromArgb(80, 80, 80);
-            this.lblConfirmPassword.Location = new System.Drawing.Point(40, 235);
+            this.lblConfirmPassword.Location = new System.Drawing.Point(40, 290);
             this.lblConfirmPassword.Name = "lblConfirmPassword";
             this.lblConfirmPassword.Size = new System.Drawing.Size(104, 15);
-            this.lblConfirmPassword.TabIndex = 7;
+            this.lblConfirmPassword.TabIndex = 9;
             this.lblConfirmPassword.Text = "Confirm Password";
             // 
             // txtConfirmPassword
             // 
             this.txtConfirmPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtConfirmPassword.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.txtConfirmPassword.Location = new System.Drawing.Point(40, 253);
+            this.txtConfirmPassword.Location = new System.Drawing.Point(40, 308);
             this.txtConfirmPassword.Name = "txtConfirmPassword";
             this.txtConfirmPassword.PasswordChar = '*';
             this.txtConfirmPassword.Size = new System.Drawing.Size(320, 27);
-            this.txtConfirmPassword.TabIndex = 8;
+            this.txtConfirmPassword.TabIndex = 10;
             // 
             // lblRole
             // 
             this.lblRole.AutoSize = true;
             this.lblRole.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblRole.ForeColor = System.Drawing.Color.FromArgb(80, 80, 80);
-            this.lblRole.Location = new System.Drawing.Point(40, 290);
+            this.lblRole.Location = new System.Drawing.Point(40, 345);
             this.lblRole.Name = "lblRole";
             this.lblRole.Size = new System.Drawing.Size(30, 15);
-            this.lblRole.TabIndex = 9;
+            this.lblRole.TabIndex = 11;
             this.lblRole.Text = "Role";
             // 
             // cboRole
@@ -169,20 +191,20 @@ namespace Hospital_Management.Views
             this.cboRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboRole.Font = new System.Drawing.Font("Segoe UI", 11F);
             this.cboRole.FormattingEnabled = true;
-            this.cboRole.Location = new System.Drawing.Point(40, 308);
+            this.cboRole.Location = new System.Drawing.Point(40, 363);
             this.cboRole.Name = "cboRole";
             this.cboRole.Size = new System.Drawing.Size(150, 28);
-            this.cboRole.TabIndex = 10;
+            this.cboRole.TabIndex = 12;
             // 
             // lblDepartment
             // 
             this.lblDepartment.AutoSize = true;
             this.lblDepartment.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblDepartment.ForeColor = System.Drawing.Color.FromArgb(80, 80, 80);
-            this.lblDepartment.Location = new System.Drawing.Point(210, 290);
+            this.lblDepartment.Location = new System.Drawing.Point(210, 345);
             this.lblDepartment.Name = "lblDepartment";
             this.lblDepartment.Size = new System.Drawing.Size(70, 15);
-            this.lblDepartment.TabIndex = 11;
+            this.lblDepartment.TabIndex = 13;
             this.lblDepartment.Text = "Department";
             // 
             // cboDepartment
@@ -190,10 +212,10 @@ namespace Hospital_Management.Views
             this.cboDepartment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboDepartment.Font = new System.Drawing.Font("Segoe UI", 11F);
             this.cboDepartment.FormattingEnabled = true;
-            this.cboDepartment.Location = new System.Drawing.Point(210, 308);
+            this.cboDepartment.Location = new System.Drawing.Point(210, 363);
             this.cboDepartment.Name = "cboDepartment";
             this.cboDepartment.Size = new System.Drawing.Size(150, 28);
-            this.cboDepartment.TabIndex = 12;
+            this.cboDepartment.TabIndex = 14;
             // 
             // btnRegister
             // 
@@ -203,10 +225,10 @@ namespace Hospital_Management.Views
             this.btnRegister.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRegister.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.btnRegister.ForeColor = System.Drawing.Color.White;
-            this.btnRegister.Location = new System.Drawing.Point(40, 360);
+            this.btnRegister.Location = new System.Drawing.Point(40, 415);
             this.btnRegister.Name = "btnRegister";
             this.btnRegister.Size = new System.Drawing.Size(150, 40);
-            this.btnRegister.TabIndex = 13;
+            this.btnRegister.TabIndex = 15;
             this.btnRegister.Text = "Register";
             this.btnRegister.UseVisualStyleBackColor = false;
             this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
@@ -219,10 +241,10 @@ namespace Hospital_Management.Views
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(60, 60, 60);
-            this.btnCancel.Location = new System.Drawing.Point(210, 360);
+            this.btnCancel.Location = new System.Drawing.Point(210, 415);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(150, 40);
-            this.btnCancel.TabIndex = 14;
+            this.btnCancel.TabIndex = 16;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -232,7 +254,7 @@ namespace Hospital_Management.Views
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(200, 210, 200);
-            this.ClientSize = new System.Drawing.Size(600, 550);
+            this.ClientSize = new System.Drawing.Size(600, 620);
             this.Controls.Add(this.pnlCard);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -254,6 +276,8 @@ namespace Hospital_Management.Views
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.Label lblEmail;
         private System.Windows.Forms.TextBox txtEmail;
+        private System.Windows.Forms.Label lblCNIC;
+        private System.Windows.Forms.TextBox txtCNIC;
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Label lblConfirmPassword;
