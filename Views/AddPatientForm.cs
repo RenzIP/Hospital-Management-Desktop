@@ -165,10 +165,7 @@ namespace Hospital_Management.Views
             }
             catch (Exception ex)
             {
-                // Demo mode
-                string message = isEditMode ? "Patient information updated successfully! (Demo mode)" : "Patient registered successfully! (Demo mode)";
-                MessageBox.Show(message, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
+                MessageBox.Show($"Database Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -367,8 +367,8 @@ namespace Hospital_Management.Views.Controls
 
         public void LoadCapitalData()
         {
-            try { using (var conn = DatabaseHelper.Instance.GetConnection()) { conn.Open(); MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT transaction_id as 'ID', type as 'Type', category as 'Category', amount as 'Amount', date as 'Date', description as 'Description' FROM capital", conn); capitalDataTable = new DataTable(); adapter.Fill(capitalDataTable); dgvCapital.DataSource = capitalDataTable; } }
-            catch { LoadSampleData(); }
+            try { using (var conn = DatabaseHelper.Instance.GetConnection()) { conn.Open(); MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT transaction_id as 'ID', transaction_type as 'Type', category as 'Category', amount as 'Amount', transaction_date as 'Date', description as 'Description' FROM capital ORDER BY transaction_date DESC", conn); capitalDataTable = new DataTable(); adapter.Fill(capitalDataTable); dgvCapital.DataSource = capitalDataTable; } }
+            catch (Exception ex) { MessageBox.Show($"Error loading data: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error); LoadSampleData(); }
             UpdateSummary();
         }
 

@@ -373,7 +373,7 @@ namespace Hospital_Management.Views.Controls
         public void LoadUnitData()
         {
             try { using (var conn = DatabaseHelper.Instance.GetConnection()) { conn.Open(); MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT unit_id as 'Unit ID', unit_name as 'Unit Name', unit_type as 'Type', floor as 'Floor', capacity as 'Capacity', status as 'Status' FROM units", conn); unitDataTable = new DataTable(); adapter.Fill(unitDataTable); dgvUnits.DataSource = unitDataTable; } }
-            catch { LoadSampleData(); }
+            catch (Exception ex) { MessageBox.Show($"Error loading data: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error); LoadSampleData(); }
         }
 
         private void LoadSampleData()

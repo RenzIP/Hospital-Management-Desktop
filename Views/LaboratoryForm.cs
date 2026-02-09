@@ -186,8 +186,7 @@ namespace Hospital_Management.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lab test deleted successfully! (Demo mode)", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadSampleData();
+                MessageBox.Show($"Database Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
