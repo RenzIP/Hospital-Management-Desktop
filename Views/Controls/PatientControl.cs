@@ -453,7 +453,7 @@ namespace Hospital_Management.Views.Controls
                     dgvPatients.DataSource = patientDataTable;
                 }
             }
-            catch { LoadSampleData(); }
+            catch (Exception ex) { MessageBox.Show($"Error loading data: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error); LoadSampleData(); }
         }
 
         private void LoadSampleData()

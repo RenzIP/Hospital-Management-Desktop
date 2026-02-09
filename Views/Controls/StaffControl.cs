@@ -691,7 +691,7 @@ namespace Hospital_Management.Views.Controls
                     dgvStaff.DataSource = staffDataTable;
                 }
             }
-            catch { LoadSampleData(); }
+            catch (Exception ex) { MessageBox.Show($"Error loading data: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error); LoadSampleData(); }
         }
 
         private void LoadSampleData()

@@ -332,8 +332,28 @@ namespace Hospital_Management.Views.Controls
 
         public void LoadLabData()
         {
-            try { using (var conn = DatabaseHelper.Instance.GetConnection()) { conn.Open(); MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT lab_id as 'Lab ID', test_name as 'Test Name', patient_name as 'Patient', test_date as 'Date', status as 'Status' FROM laboratory", conn); labDataTable = new DataTable(); adapter.Fill(labDataTable); dgvLaboratory.DataSource = labDataTable; } }
-            catch { LoadSampleData(); }
+            try 
+            { 
+                using (var conn = DatabaseHelper.Instance.GetConnection()) 
+                { 
+                    conn.Open(); 
+                    string query = @"SELECT l.lab_id as 'Lab ID', l.test_name as 'Test Name', 
+                                     COALESCE(p.name, 'Unknown') as 'Patient', 
+                                     l.test_date as 'Date', l.status as 'Status' 
+                                     FROM laboratory l 
+                                     LEFT JOIN patients p ON l.patient_id = p.id 
+                                     ORDER BY l.test_date DESC";
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(query, conn); 
+                    labDataTable = new DataTable(); 
+                    adapter.Fill(labDataTable); 
+                    dgvLaboratory.DataSource = labDataTable; 
+                } 
+            }
+            catch (Exception ex) 
+            { 
+                MessageBox.Show($"Error loading lab data: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                LoadSampleData(); 
+            }
         }
 
         private void LoadSampleData()

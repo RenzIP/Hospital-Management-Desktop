@@ -149,9 +149,7 @@ namespace Hospital_Management.Views
             }
             catch (Exception ex)
             {
-                string message = isEditMode ? "Transaction updated successfully! (Demo mode)" : "Transaction added successfully! (Demo mode)";
-                MessageBox.Show(message, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
+                MessageBox.Show($"Database Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
